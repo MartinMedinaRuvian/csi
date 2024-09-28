@@ -39,7 +39,7 @@ class UsuarioControl {
   }
 
   validarDatosObligatorios(dato, actualizar) {
-    const datosObligatorios = actualizar ? ['nombre_completo', 'identificacion'] : ['nombre_completo', 'identificacion', 'password']
+    const datosObligatorios = actualizar ? ['nombre_completo', 'email'] : ['nombre_completo', 'email', 'password']
     const validarPropiedadesObligatorias = new ValidacionPropiedadesObligatorias()
     const validacionPropiedadObligatoria = validarPropiedadesObligatorias.validar(dato, datosObligatorios)
     return {
@@ -73,11 +73,11 @@ class UsuarioControl {
           respuesta: validacionDatosObligatorios.respuesta
         }
       }
-      dato.identificacion = this.eliminarEspaciosEnBlanco(dato.identificacion)
+      dato.email = this.eliminarEspaciosEnBlanco(dato.email)
       const datoExistente = await dao.verInfo(dato.codigo)
-      let verificarExistencia = datoExistente.identificacion !== dato.identificacion
+      let verificarExistencia = datoExistente.email !== dato.email
       if (verificarExistencia) {
-        const yaExiste = await dao.yaExiste(dato.identificacion)
+        const yaExiste = await dao.yaExiste(dato.email)
         if (yaExiste) {
           return {
             codigo: 500,
@@ -148,10 +148,10 @@ class UsuarioControl {
         }
       }
       dato.password = this.eliminarEspaciosEnBlanco(dato.password)
-      dato.identificacion = this.eliminarEspaciosEnBlanco(dato.identificacion)
+      dato.email = this.eliminarEspaciosEnBlanco(dato.email)
       dato.password = bcrypt.hashSync(dato.password, saltRounds);
       const dao = new DAO();
-      const yaExiste = await dao.yaExiste(dato.identificacion);
+      const yaExiste = await dao.yaExiste(dato.email);
       if (yaExiste) {
         return {
           codigo: 500,
@@ -177,11 +177,11 @@ class UsuarioControl {
     }
   }
 
-  async verificar(identificacion, password) {
+  async verificar(email, password) {
     const dao = new DAO();
     try {
       password = this.eliminarEspaciosEnBlanco(password)
-      const usuario = await dao.verificarUsuario(identificacion);
+      const usuario = await dao.verificarUsuario(email);
       if (usuario.length > 0) {
         if (usuario[0].estado === '0') {
           if (!bcrypt.compareSync(password, usuario[0].password)) {
@@ -190,14 +190,13 @@ class UsuarioControl {
               respuesta: 'Contraseña incorrecta'
             }
           } else {
-            const { codigo, nombre_completo, identificacion, numero_telefono, rol_codigo, estado } = usuario[0]
+            const { codigo, nombre_completo, email, rol_codigo, estado } = usuario[0]
             return {
               codigo: 200,
               respuesta: {
                 codigo,
                 nombre_completo,
-                identificacion,
-                numero_telefono,
+                email,
                 rol_codigo,
                 estado
               }

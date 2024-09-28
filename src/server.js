@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
 const cors = require('cors');
+const verificarToken = require('./util/validar_token')
 //const history = require('connect-history-api-fallback');
 
 const app = express();
@@ -36,8 +37,8 @@ const edificioEndpoint = require('./endpoints/EdificioEndpoint')
  */
 app.use('/usuario', usuarioEndpoint)
 app.use('/rol', rolEndpoint)
-app.use('/file', subirArchivosEndpoint)
-app.use('/edificio', edificioEndpoint)
+app.use('/file', verificarToken, subirArchivosEndpoint)
+app.use('/edificio', verificarToken, edificioEndpoint)
 
 
 module.exports = app;
