@@ -24,9 +24,9 @@ class SubirArchivoControl {
     }
   }
 
-  eliminarArchivo(archivo) {
+  eliminarArchivo(ruta_archivo) {
     try {
-      const rutaArchivo = path.join(__dirname, '../archivos/' + archivo);
+      const rutaArchivo = path.join(__dirname, '../' + ruta_archivo);
       if (fs.existsSync(rutaArchivo)) {
         console.log(rutaArchivo, 'eliminar');
         fs.unlinkSync(rutaArchivo);

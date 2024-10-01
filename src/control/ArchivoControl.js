@@ -9,19 +9,19 @@ class ArchivoControl {
     this.nombreTabla = nomber_tabla
   }
 
-  async guardar(nombreArchivo, idRegistroTabla) {
+  async guardar(nombreArchivo, nombreArchivoOriginal, idRegistroTabla) {
     const dao = new DAO(this.nombreTabla)
-    const ruta = 'archivos/' + nombreArchivo 
+    const ruta = 'archivos/' + nombreArchivo
     try {
       const archivoGuardar = {
-        nombre: nombreArchivo,
+        nombre: nombreArchivoOriginal,
         ruta,
         fecha_creacion: new FechaUti().fechaActual()
       }
       const idArchivoGuardar = await dao.guardarArchivo(archivoGuardar);
       if (idArchivoGuardar > -1) {
         const idArchivoTablaGuardar = await dao.guardarArchivoTabla(idArchivoGuardar, idRegistroTabla)
-        if (idArchivoTablaGuardar > -1){
+        if (idArchivoTablaGuardar > -1) {
           return {
             codigo: 200,
             respuesta: {
@@ -38,35 +38,24 @@ class ArchivoControl {
     }
   }
 
+  async verInfoArchivo(idArchivo) {
+    return await new DAO(this.nombreTabla).verInfoArchivo(idArchivo)
+  }
 
-  async eliminar(codigo) {
+  async eliminar(idArchivo, idRegistroTabla) {
     try {
-      const dao = new DAO()
-      if (!await dao.registroTieneVentaRegistrada(codigo)) {
-        const eliminado = await dao.eliminar(codigo);
-        if (eliminado) {
-          return {
-            codigo: 200,
-            respuesta: 'Correcto'
-          }
-        } else {
-          return {
-            codigo: 500,
-            respuesta: 'Error al eliminar'
-          }
-        }
-      } else {
-        return {
-          codigo: 500,
-          respuesta: 'El registro tiene al menos una venta registrada, no se puede eliminar'
-        }
+      console.log(idArchivo, idRegistroTabla)
+      const dao = new DAO(this.nombreTabla)
+      if (await dao.eliminarArchivoTabla(idArchivo, idRegistroTabla)) {
+        if (await dao.eliminarArchivo(idArchivo)) {
+          return true
+        } 
       }
+
     } catch (error) {
-      return {
-        codigo: 500,
-        respuesta: error
-      }
+      console.log(error)
     }
+    return false
   }
 
 

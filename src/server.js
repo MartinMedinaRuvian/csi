@@ -37,7 +37,7 @@ const edificioEndpoint = require('./endpoints/EdificioEndpoint')
  */
 app.use('/usuario', usuarioEndpoint)
 app.use('/rol', rolEndpoint)
-app.use('/file', verificarToken, subirArchivosEndpoint)
+app.use('/archivo', verificarToken, subirArchivosEndpoint)
 app.use('/edificio', verificarToken, edificioEndpoint)
 
 

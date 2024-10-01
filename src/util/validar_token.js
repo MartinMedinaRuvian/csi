@@ -8,7 +8,6 @@ const verificarToken = (req, res, next) => {
     const token = authorization.split(' ')[1]
     try {
       const verificado = jwt.verify(token, process.env.TOKEN_SECRETO)
-      console.log(verificado, 'ver')
       next() // continuamos
     } catch (error) {
       res.status(400).json({ error: 'token no es válido' })

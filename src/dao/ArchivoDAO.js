@@ -13,10 +13,8 @@ class ArchivoDAO {
 
   async guardarArchivo(dato) {
     const { nombre, ruta, fecha_creacion } = dato
-    console.log(dato, 'datoo')
-    const datoGuardar = new Archivo(nombre.toUpperCase(), ruta, fecha_creacion, null)
+    const datoGuardar = new Archivo(nombre, ruta, fecha_creacion, null)
     const guardar = await conexion.query('INSERT INTO ' + nombreTablaGeneral + ' SET ?', [datoGuardar])
-    console.log(guardar, 'guardar')
     return guardar.affectedRows > 0 ? guardar.insertId : -1
   }
 
@@ -28,8 +26,23 @@ class ArchivoDAO {
     return guardar.affectedRows > 0 ? guardar.insertId : -1
   }
 
-  async eliminar(id) {
-    const eliminar = await conexion.query('DELETE FROM ' + nombreTabla + ' WHERE id=?', [id]);
+  async verInfoArchivo(id_archivo) {
+    const datos = await conexion.query('SELECT nombre, ruta FROM ' + nombreTablaGeneral + ' WHERE id=?', [id_archivo])
+    return datos[0]
+}
+
+  async eliminarArchivo(id_archivo) {
+    console.log(id_archivo, 'ideli')
+    const eliminar = await conexion.query('DELETE FROM ' + nombreTablaGeneral + ' WHERE id=?', [id_archivo]);
+    return eliminar.affectedRows > 0
+  }
+
+  async eliminarArchivoTabla(id_archivo, id_registro_tabla) {
+    const nombreTablaEliminar = this.nombreTabla + '_archivo'
+    const columnaTablaEliminar = 'id_' + this.nombreTabla
+    const queryEliminar = 'DELETE FROM ' + nombreTablaEliminar + " WHERE id_archivo=" + id_archivo + " AND " +  columnaTablaEliminar + "=" + id_registro_tabla
+    console.log(queryEliminar);
+    const eliminar = await conexion.query(queryEliminar);
     return eliminar.affectedRows > 0
   }
 
