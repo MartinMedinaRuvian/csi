@@ -10,7 +10,7 @@ class SubirArchivoControl {
         cb(null, path.join(__dirname, '../archivos'));
       },
       filename: (req, file, cb) => {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+        cb(null, Date.now() + path.extname(file.originalname));
       }
     });
     this.upload = multer({ storage: this.storage });

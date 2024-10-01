@@ -31,6 +31,7 @@ const usuarioEndpoint = require('./endpoints/UsuarioEndpoint')
 const rolEndpoint = require('./endpoints/RolEndpoint')
 const subirArchivosEndpoint = require('./endpoints/SubirArchivoEndpoint')
 const edificioEndpoint = require('./endpoints/EdificioEndpoint')
+const imagenEndpoint = require('./endpoints/ImagenEndpint')
 
 /**
  * configuro las rutas del servidor
@@ -38,6 +39,7 @@ const edificioEndpoint = require('./endpoints/EdificioEndpoint')
 app.use('/usuario', usuarioEndpoint)
 app.use('/rol', rolEndpoint)
 app.use('/archivo', verificarToken, subirArchivosEndpoint)
+app.use('/imagen', verificarToken, imagenEndpoint)
 app.use('/edificio', verificarToken, edificioEndpoint)
 
 

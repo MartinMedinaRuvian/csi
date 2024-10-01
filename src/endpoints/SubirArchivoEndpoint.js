@@ -5,7 +5,7 @@ const Control = require('../control/SubirArchivoControl');
 const controlArchivos = new Control()
 const ArchivoControl = require('../control/ArchivoControl');
 
-rutas.post('/:nombre_tabla/:id_registro_tabla', controlArchivos.upload.single('file'), (req, res) => {
+rutas.post('/:nombre_tabla/:id_registro_tabla', controlArchivos.upload.single('archivo'), (req, res) => {
   const { nombre_tabla, id_registro_tabla } = req.params
   const archivoControl = new ArchivoControl(nombre_tabla)
   const nombreArchivo = req.file.filename

@@ -144,6 +144,19 @@ class EdificioControl {
     }
   }
 
+  async actualizarImagen(id, ruta_imagen) {
+    try {
+      const dao = new DAO()
+      if (await dao.actualizarImagen(id, ruta_imagen)) {
+        return true
+      }
+        
+    } catch (error) {
+      console.log(error)
+    }
+    return false
+  }
+
   async cambiarEstado(dato) {
     const { estado, codigo } = dato
     try {
