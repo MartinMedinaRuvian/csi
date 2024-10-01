@@ -1,4 +1,4 @@
-class Edificio {
+class Gabinete {
 
   id
   nombre
@@ -21,4 +21,4 @@ class Edificio {
 
 }
 
-module.exports = Edificio;
+module.exports = Gabinete;

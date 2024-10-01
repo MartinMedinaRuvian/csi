@@ -6,7 +6,7 @@ const nombreTabla = 'edificio'
 class EdificioDAO {
 
     async obtenerTodos() {
-        const datos = await conexion.query('SELECT * FROM ' + nombreTabla + ' WHERE estado=0 ORDER BY id DESC')
+        const datos = await conexion.query("SELECT * FROM " + nombreTabla + " WHERE estado='A'" + " ORDER BY id DESC")
         return datos
     }
 

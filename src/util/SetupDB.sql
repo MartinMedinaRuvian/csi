@@ -30,9 +30,9 @@
 
   create table if not exists edificio(
     id int(100) not null auto_increment primary key,
-    nombre char(200),
-    ubicacion char(200) not null,
-    codigo char(10),
+    nombre char(200) not null,
+    ubicacion char(200),
+    codigo char(10) not null,
     ruta_imagen char(30),
     observacion char(255),
     fecha_creacion date not null,
@@ -44,7 +44,7 @@
     id int(100) not null auto_increment primary key,
     nombre char(30) not null,
     ruta_imagen char(50),
-    observacion char(255) not null,
+    observacion char(255),
     fecha_creacion date not null,
     fecha_actualizacion date,
     estado char(1) not null
@@ -55,7 +55,7 @@
     nombre char(30) not null,
     ruta_imagen char(50),
     ubicacion char(100),
-    observacion char(255) not null,
+    observacion char(255),
     fecha_creacion date not null,
     fecha_actualizacion date,
     estado char(1) not null
@@ -73,18 +73,18 @@
     estado char(1) not null
   );
 
-  insert into proyecto(codigo, certificacion, nombre_empresa, nit_empresa, fecha, fecha_creacion, estado) values ('001-PRUEBA', 'CERT-PRUEBA', 'EMPRESA PRUEBA', '111111', '2022-09-28', '2024-09-28', 'A');
+  insert into proyecto(codigo, certificacion, nombre_empresa, nit_empresa, fecha, fecha_creacion, estado) values ('000-PRUEBA', 'CERT-PRUEBA', 'EMPRESA PRUEBA', '00000000', '2022-09-28', '2024-09-28', 'A');
 
   create table if not exists elemento(
     id int(20) not null auto_increment primary key,
     nombre char(200) not null,
     referencia char(200),
     serial char(1),
-    tipo char(1),
+    tipo char(1) not null,
     observacion char(255),
     codigo_inventario char(100),
     ruta_imagen char(200),
-    fecha_creacion date,
+    fecha_creacion date not null,
     fecha_actualizacion date,
     estado char(1) not null,
     id_edificio int(100) not null,

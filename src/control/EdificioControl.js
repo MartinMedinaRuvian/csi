@@ -1,4 +1,4 @@
-const DAO = require('../DAO/EdificioDAO');
+const DAO = require('../dao/EdificioDAO');
 const ValidacionPropiedadesObligatorias = require('../util/validar_propiedades');
 const StringUtil = require('../util/string_util')
 const FechaUti = require('../util/Fecha')
@@ -88,7 +88,7 @@ class EdificioControl {
           respuesta: 'Ya existe'
         }
       } else {
-        dato.estado = "0"
+        dato.estado = "A"
         dato.fecha_creacion = new FechaUti().fechaActual()
         const codigoGuardar = await dao.guardar(dato);
         if (codigoGuardar > -1) {
