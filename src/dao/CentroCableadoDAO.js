@@ -1,11 +1,11 @@
-const Edificio = require('../modelo/Edificio')
+const CentroCableado = require('../modelo/CentroCableado')
 const conexion = require('../util/conexion_mysql')
 const GenerarQueryActualizarDB = require('../util/generar_query_actualizar_db')
 
-const nombreTabla = 'edificio'
+const nombreTabla = 'centro_cableado'
 const idPropiedad = 'id'
 
-class EdificioDAO {
+class CentroCableadoDAO {
 
     async obtenerTodos() {
         const datos = await conexion.query("SELECT * FROM " + nombreTabla + " WHERE estado='A'" + " ORDER BY " + idPropiedad + " DESC")
@@ -22,7 +22,7 @@ class EdificioDAO {
         return datos[0]
     }
 
-    async verEdificiosPorCodigo(codigo) {
+    async verCentroCableadosPorCodigo(codigo) {
         const datos = await conexion.query('SELECT * FROM ' + nombreTabla + ' WHERE codigo=? AND estado = 0', [codigo])
         return datos
     }
@@ -34,7 +34,7 @@ class EdificioDAO {
 
     async guardar(dato) {
         const { nombre, ubicacion, codigo, ruta_imagen, observacion, fecha_creacion, estado } = dato
-        const datoGuardar = new Edificio(nombre.toUpperCase(), ubicacion, codigo.toUpperCase(), ruta_imagen, observacion, fecha_creacion, null, estado)
+        const datoGuardar = new CentroCableado(nombre.toUpperCase(), ubicacion, codigo.toUpperCase(), ruta_imagen, observacion, fecha_creacion, null, estado)
         const guardar = await conexion.query('INSERT INTO ' + nombreTabla + ' SET ?', [datoGuardar])
         return guardar.affectedRows > 0 ? guardar.insertId : -1
     }
@@ -45,7 +45,7 @@ class EdificioDAO {
     }    
     
     async actualizar(dato) {
-        const generarQueryActualizarDB = new GenerarQueryActualizarDB(dato, nombreTabla, idPropiedad, Edificio)
+        const generarQueryActualizarDB = new GenerarQueryActualizarDB(dato, nombreTabla, idPropiedad, CentroCableado)
         const consulta = await generarQueryActualizarDB.consultaGenerada()
         const valores = await generarQueryActualizarDB.valoresGenerados()
         try {
@@ -63,4 +63,4 @@ class EdificioDAO {
 
 }
 
-module.exports = EdificioDAO
+module.exports = CentroCableadoDAO

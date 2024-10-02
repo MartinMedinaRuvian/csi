@@ -3,9 +3,6 @@ const rutas = express.Router();
 
 const Control = require('../control/EdificioControl');
 
-const ControlAchivos = require('../control/SubirArchivoControl');
-const controlArchivos = new ControlAchivos()
-
 rutas.get('/', async (req, res) => {
    const ctr = new Control();
    const control = await ctr.verTodos()
@@ -25,7 +22,6 @@ rutas.post('/buscarfiltrado', async (req, res) => {
    const control = await ctr.verConFiltro(condicion, buscar)
    res.status(control.codigo).json(control.respuesta)
 });
-
 
 rutas.post('/', async (req, res) => {
    const ctr = new Control()

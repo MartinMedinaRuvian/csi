@@ -1,17 +1,15 @@
-class Edificio {
+class CentroCableado {
 
   id
   nombre
   ruta_imagen
   observacion
-  ubicacion
   fecha_creacion
   fecha_actualizacion
   estado
 
-  constructor(nombre, ruta_imagen, observacion, ubicacion, fecha_creacion, fecha_actualizacion, estado) {
+  constructor(nombre, ruta_imagen, observacion, fecha_creacion, fecha_actualizacion, estado) {
     this.nombre = nombre
-    this.ubicacion = ubicacion
     this.ruta_imagen = ruta_imagen
     this.observacion = observacion
     this.fecha_creacion = fecha_creacion
@@ -21,4 +19,4 @@ class Edificio {
 
 }
 
-module.exports = Edificio;
+module.exports = CentroCableado;
