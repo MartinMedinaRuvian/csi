@@ -1,6 +1,5 @@
 const DAO = require('../dao/CentroCableadoDAO');
 const ValidacionPropiedadesObligatorias = require('../util/validar_propiedades');
-const StringUtil = require('../util/string_util')
 const FechaUti = require('../util/Fecha')
 
 class CentroCableadoControl {
@@ -60,21 +59,47 @@ class CentroCableadoControl {
     }
   }
 
+  validarDatosObligatorios(dato) {
+    const datosObligatorios = ['numero', 'id_edificio']
+    const validarPropiedadesObligatorias = new ValidacionPropiedadesObligatorias()
+    const validacionPropiedadObligatoria = validarPropiedadesObligatorias.validar(dato, datosObligatorios)
+    return {
+      codigo: validacionPropiedadObligatoria.codigo,
+      respuesta: validacionPropiedadObligatoria.respuesta
+    }
+  }
+
 
   async guardar(dato) {
     const dao = new DAO()
     try {
-      dato.estado = 'A'
-      dato.fecha_creacion = new FechaUti().fechaActual()
-      const codigoGuardar = await dao.guardar(dato);
-      if (codigoGuardar > -1) {
+      const validacionDatosObligatorios = this.validarDatosObligatorios(dato)
+      if (validacionDatosObligatorios.codigo !== 200) {
         return {
-          codigo: 200,
-          respuesta: {
-            codigo: codigoGuardar
-          }
+          codigo: validacionDatosObligatorios.codigo,
+          respuesta: validacionDatosObligatorios.respuesta
         }
       }
+      dato.estado = 'A'
+      dato.fecha_creacion = new FechaUti().fechaActual()
+
+      const yaExiste = await dao.yaExiste(dato.numero, dato.id_edificio);
+      if (yaExiste) {
+        return {
+          codigo: 500,
+          respuesta: 'Ya existe'
+        }
+      } else {
+        const codigoGuardar = await dao.guardar(dato);
+        if (codigoGuardar > -1) {
+          return {
+            codigo: 200,
+            respuesta: {
+              codigo: codigoGuardar
+            }
+          }
+        }
+      }    
 
     } catch (error) {
       return {
@@ -87,7 +112,8 @@ class CentroCableadoControl {
   async actualizar(dato) {
     const dao = new DAO()
     try {
-      if (await dao.actualizar(dato.codigo, dato)) {
+      dato.fecha_actualizacion = new FechaUti().fechaActual()
+      if (await dao.actualizar(dato)) {
         return {
           codigo: 200,
           respuesta: 'Correcto'

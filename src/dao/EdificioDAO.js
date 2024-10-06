@@ -33,8 +33,8 @@ class EdificioDAO {
     }
 
     async guardar(dato) {
-        const { nombre, ubicacion, codigo, ruta_imagen, observacion, fecha_creacion, estado } = dato
-        const datoGuardar = new Edificio(nombre.toUpperCase(), ubicacion, codigo.toUpperCase(), ruta_imagen, observacion, fecha_creacion, null, estado)
+        const { nombre, codigo, ubicacion_mapa, ruta_imagen, observacion, fecha_creacion, estado } = dato
+        const datoGuardar = new Edificio(nombre.toUpperCase(), codigo.toUpperCase(), ubicacion_mapa, ruta_imagen, observacion, fecha_creacion, null, estado)
         const guardar = await conexion.query('INSERT INTO ' + nombreTabla + ' SET ?', [datoGuardar])
         return guardar.affectedRows > 0 ? guardar.insertId : -1
     }
@@ -54,6 +54,7 @@ class EdificioDAO {
         } catch (error) {
             console.error('Error al actualizar:', error);
         }
+        return false
     }
     
     async eliminar(id) {

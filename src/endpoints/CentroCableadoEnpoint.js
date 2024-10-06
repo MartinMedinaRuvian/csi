@@ -1,7 +1,7 @@
 const express = require('express');
 const rutas = express.Router();
 
-const Control = require('../control/EdificioControl');
+const Control = require('../control/CentroCableadoControl');
 
 rutas.get('/', async (req, res) => {
    const ctr = new Control();

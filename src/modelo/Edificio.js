@@ -2,18 +2,18 @@ class Edificio {
 
   id
   nombre
-  ubicacion
   codigo
+  ubicacion_mapa
   ruta_imagen
   observacion
   fecha_creacion
   fecha_actualizacion
   estado
   
-  constructor (nombre, ubicacion, codigo, ruta_imagen, observacion, fecha_creacion, fecha_actualizacion, estado) {
+  constructor (nombre, codigo, ubicacion_mapa, ruta_imagen, observacion, fecha_creacion, fecha_actualizacion, estado) {
       this.nombre = nombre
-      this.ubicacion = ubicacion
       this.codigo = codigo
+      this.ubicacion_mapa = ubicacion_mapa
       this.ruta_imagen = ruta_imagen
       this.observacion = observacion
       this.fecha_creacion = fecha_creacion

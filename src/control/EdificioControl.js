@@ -80,7 +80,8 @@ class EdificioControl {
           respuesta: validacionDatosObligatorios.respuesta
         }
       }
-      dato.codigo = new StringUtil().eliminarEspaciosEnBlanco(dato.codigo)
+      dato.codigo = new StringUtil().eliminarEspaciosEnBlanco(dato.codigo).toUpperCase()
+      dato.nombre = dato.nombre.toUpperCase()
       const yaExiste = await dao.yaExiste(dato.codigo);
       if (yaExiste) {
         return {
@@ -112,9 +113,12 @@ class EdificioControl {
     const dao = new DAO()
     try {
       if (dato.codigo != null && dato.codigo != undefined){
-        dato.codigo = new StringUtil().eliminarEspaciosEnBlanco(dato.codigo)
+        dato.codigo = new StringUtil().eliminarEspaciosEnBlanco(dato.codigo).toUpperCase()
       }
       dato.fecha_actualizacion = new FechaUti().fechaActual()
+      if (dato.nombre != null && dato.nombre != undefined){
+        dato.nombre = dato.nombre.toUpperCase()
+      }
       if (await dao.actualizar(dato)) {
         return {
           codigo: 200,
@@ -157,10 +161,10 @@ class EdificioControl {
     }
   }
 
-  async eliminar(codigo) {
+  async eliminar(id) {
     try {
       const dao = new DAO()
-      const eliminado = await dao.eliminar(codigo);
+      const eliminado = await dao.eliminar(id);
       if (eliminado) {
         return {
           codigo: 200,

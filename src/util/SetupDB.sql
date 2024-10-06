@@ -29,10 +29,10 @@
   insert into usuario(password, nombre_completo, email, fecha_creacion, estado, rol_id) values ('$2b$10$SMsE7S2LNQQMssCrM7uZBu.GEWnUiZINcSRBWiAS3LzMScRipcAzu', 'Martin Medina', 'martinjesusmr@ufps.edu.co', '2024-09-24', '0', 1);
 
   create table if not exists edificio(
-    id int(100) not null auto_increment primary key,
+    id int(50) not null auto_increment primary key,
     nombre char(200) not null,
-    ubicacion char(200),
     codigo char(10) not null,
+    ubicacion_mapa char(100),
     ruta_imagen char(255),
     observacion char(255),
     fecha_creacion date not null,
@@ -41,24 +41,29 @@
   );
 
   create table if not exists centro_cableado(
-    id int(100) not null auto_increment primary key,
-    nombre char(30) not null,
+    id int(50) not null auto_increment primary key,
+    numero int(5) not null,
+    ubicacion char(200),
     ruta_imagen char(255),
     observacion char(255),
     fecha_creacion date not null,
     fecha_actualizacion date,
-    estado char(1) not null
+    estado char(1) not null,
+    id_edificio int(50) not null,
+    constraint centro_cableado_edificio_llave foreign key (id_edificio) references edificio(id)
   );
 
   create table if not exists gabinete(
-    id int(100) not null auto_increment primary key,  
-    nombre char(30) not null,
+    id int(50) not null auto_increment primary key,  
+    numero int(5) not null,
+    ubicacion char(200),
     ruta_imagen char(255),
-    ubicacion char(100),
     observacion char(255),
     fecha_creacion date not null,
     fecha_actualizacion date,
-    estado char(1) not null
+    estado char(1) not null,
+    id_centro_cableado int(50) not null,
+    constraint gabinete_centro_cableado_llave foreign key (id_centro_cableado) references centro_cableado(id)
   );
 
   create table if not exists proyecto(
@@ -87,13 +92,9 @@
     fecha_creacion date not null,
     fecha_actualizacion date,
     estado char(1) not null,
-    id_edificio int(100) not null,
-    id_centro_cableado int(100) not null,
     id_gabinete int(100) not null,
     id_proyecto int(100) not null,
     usuario_id int(100) not null,
-    constraint elemento_edificio_llave foreign key (id_edificio) references edificio(id),
-    constraint elemento_centro_cableado_llave foreign key (id_centro_cableado) references centro_cableado(id),
     constraint elemento_gabinete_llave foreign key (id_gabinete) references gabinete(id),
     constraint elemento_proyecto_llave foreign key (id_proyecto) references proyecto(id),
     constraint elemento_usuario_llave foreign key (usuario_id) references usuario(id)
