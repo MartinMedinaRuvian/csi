@@ -45,6 +45,7 @@ class EdificioDAO {
     }    
     
     async actualizar(dato) {
+        console.log(dato)
         const generarQueryActualizarDB = new GenerarQueryActualizarDB(dato, nombreTabla, idPropiedad, Edificio)
         const consulta = await generarQueryActualizarDB.consultaGenerada()
         const valores = await generarQueryActualizarDB.valoresGenerados()

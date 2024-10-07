@@ -33,7 +33,7 @@ class UsuarioDAO{
     }
 
     async verificarUsuario(email){
-        const dato = await conexion.query('SELECT * FROM ' + nombreTabla + ' WHERE email=?', [email]);
+        const dato = await conexion.query('SELECT * FROM ' + nombreTabla + ' WHERE email=? limit 1', [email]);
         return dato.length > 0 ? dato : [];
     }
 

@@ -91,12 +91,12 @@ class EdificioControl {
       } else {
         dato.estado = 'A'
         dato.fecha_creacion = new FechaUti().fechaActual()
-        const codigoGuardar = await dao.guardar(dato);
-        if (codigoGuardar > -1) {
+        const idGuardar = await dao.guardar(dato);
+        if (idGuardar > -1) {
           return {
             codigo: 200,
             respuesta: {
-              codigo: codigoGuardar
+              id: idGuardar
             }
           }
         }

@@ -183,34 +183,34 @@ class UsuarioControl {
       password = this.eliminarEspaciosEnBlanco(password)
       const usuario = await dao.verificarUsuario(email);
       if (usuario.length > 0) {
-        if (usuario[0].estado === '0') {
+        if (usuario[0].estado === 'A') {
           if (!bcrypt.compareSync(password, usuario[0].password)) {
             return {
-              codigo: 400,
+              codigo: 500,
               respuesta: 'Contraseña incorrecta'
             }
           } else {
-            const { codigo, nombre_completo, email, rol_codigo, estado } = usuario[0]
+            const { id, nombre_completo, email, rol_id, estado } = usuario[0]
             return {
               codigo: 200,
               respuesta: {
-                codigo,
+                id,
                 nombre_completo,
                 email,
-                rol_codigo,
+                rol_id,
                 estado
               }
             }
           }
         } else {
           return {
-            codigo: 400,
+            codigo: 500,
             respuesta: 'Usuario inactivo'
           }
         }
       } else {
         return {
-          codigo: 400,
+          codigo: 500,
           respuesta: 'Usuario incorrecto'
         }
       }

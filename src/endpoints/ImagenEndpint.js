@@ -8,18 +8,21 @@ const controlArchivos = new ControlAchivos()
 
 rutas.put('/:nombre_tabla/:id', controlArchivos.upload.single('archivo'), async (req, res) => {
    const { nombre_tabla, id  } = req.params
+   const carpeta_archivos = 'archivos/'
+   let ruta_imagen = ''
    if (req.file != null && req.file != undefined) {
       const nombreArchivo = req.file.filename
-      const ruta_imagen = 'archivos/' + nombreArchivo
-      const ctr = new Control(nombre_tabla)
-      const infoActualizada = await ctr.actualizarImagen(id, ruta_imagen)
-      if (infoActualizada) {
-         res.status(200).json({ mensaje: 'Imagen Actualizada correctamente' });
-      } else {
-         res.status(400).json({ mensaje: 'Error al actualizar imagen' })
-      }
+      ruta_imagen = carpeta_archivos + nombreArchivo
    } else {
-      res.status(400).json({ mensaje: 'Debe seleccionar una imagen' })
+      const nombreArchivo = nombre_tabla + '_default.svg' 
+      ruta_imagen = carpeta_archivos + nombreArchivo
+   }
+   const ctr = new Control(nombre_tabla)
+   const infoActualizada = await ctr.actualizarImagen(id, ruta_imagen)
+   if (infoActualizada) {
+      res.status(200).json({ mensaje: 'Imagen Actualizada correctamente' });
+   } else {
+      res.status(400).json({ mensaje: 'Error al actualizar imagen' })
    }
 })
 

@@ -26,7 +26,7 @@
     constraint usuario_rol_llave foreign key (rol_id) references rol(id)
   );
 
-  insert into usuario(password, nombre_completo, email, fecha_creacion, estado, rol_id) values ('$2b$10$SMsE7S2LNQQMssCrM7uZBu.GEWnUiZINcSRBWiAS3LzMScRipcAzu', 'Martin Medina', 'martinjesusmr@ufps.edu.co', '2024-09-24', '0', 1);
+  insert into usuario(password, nombre_completo, email, fecha_creacion, estado, rol_id) values ('$2b$10$SMsE7S2LNQQMssCrM7uZBu.GEWnUiZINcSRBWiAS3LzMScRipcAzu', 'Martin Medina', 'martinjesusmr@ufps.edu.co', '2024-09-24', 'A', 1);
 
   create table if not exists edificio(
     id int(50) not null auto_increment primary key,

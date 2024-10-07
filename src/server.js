@@ -23,6 +23,11 @@ app.use(express.urlencoded({extended:true}));
  * Configuro la carpeta publica donde va ir todo el frontend
  */
  app.use(express.static(path.join(__dirname, 'publico')))
+
+  /**
+  * Configuro carpeta publica y estatica para acceder a los archivos
+  */
+  app.use('/archivos', express.static(path.join(__dirname, 'archivos')));
  
 /**
  * Importo rutas a usar en el servidor
