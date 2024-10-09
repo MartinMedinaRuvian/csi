@@ -10,10 +10,10 @@ const verificarToken = (req, res, next) => {
       const verificado = jwt.verify(token, process.env.TOKEN_SECRETO)
       next() // continuamos
     } catch (error) {
-      res.status(400).json({ error: 'token no es válido' })
+      res.status(401).json({ error: 'token no es válido' })
     }
   } else {
-    return res.status(401).json({ error: 'Acceso denegado' })
+    return res.status(403).json({ error: 'Acceso denegado' })
   }
 }
 

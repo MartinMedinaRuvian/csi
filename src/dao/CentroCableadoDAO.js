@@ -13,7 +13,12 @@ class CentroCableadoDAO {
     }
 
     async obtenerFiltrado(condicion, buscar) {
-        const datos = await conexion.query('SELECT * FROM ' + numeroTabla + " WHERE " + condicion + " LIKE '%" + buscar + "%' AND estado=0" + " ORDER BY " + idPropiedad + " DESC")
+        const datos = await conexion.query('SELECT * FROM ' + numeroTabla + " WHERE " + condicion + " LIKE '%" + buscar + "%' AND estado='A'" + " ORDER BY " + idPropiedad + " DESC")
+        return datos
+    }
+
+    async verPorIdEdificio(id_edificio) {
+        const datos = await conexion.query('SELECT * FROM ' + numeroTabla + ' WHERE id_edificio=?' + "AND estado=0" + " ORDER BY numero DESC", [id_edificio])
         return datos
     }
 

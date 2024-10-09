@@ -43,6 +43,23 @@ class CentroCableadoControl {
     }
   }
 
+  async verPorIdEdificio(id_edificio) {
+    const dao = new DAO();
+    try {
+      const datos = await dao.verPorIdEdificio(id_edificio)
+      console.log(datos)
+      return {
+        codigo: 200,
+        respuesta: datos
+      }
+    } catch (error) {
+      return {
+        codigo: 500,
+        respuesta: error
+      }
+    }
+  }
+
   async verConFiltro(condicion, buscar) {
     try {
       const dao = new DAO()
@@ -60,7 +77,7 @@ class CentroCableadoControl {
   }
 
   validarDatosObligatorios(dato) {
-    const datosObligatorios = ['numero', 'id_edificio']
+    const datosObligatorios = ['numero', 'ubicacion', 'id_edificio']
     const validarPropiedadesObligatorias = new ValidacionPropiedadesObligatorias()
     const validacionPropiedadObligatoria = validarPropiedadesObligatorias.validar(dato, datosObligatorios)
     return {
@@ -90,12 +107,12 @@ class CentroCableadoControl {
           respuesta: 'Ya existe'
         }
       } else {
-        const codigoGuardar = await dao.guardar(dato);
-        if (codigoGuardar > -1) {
+        const id = await dao.guardar(dato);
+        if (id > -1) {
           return {
             codigo: 200,
             respuesta: {
-              codigo: codigoGuardar
+              id: id
             }
           }
         }

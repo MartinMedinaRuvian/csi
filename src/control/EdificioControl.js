@@ -82,6 +82,7 @@ class EdificioControl {
       }
       dato.codigo = new StringUtil().eliminarEspaciosEnBlanco(dato.codigo).toUpperCase()
       dato.nombre = dato.nombre.toUpperCase()
+      console.log(dato)
       const yaExiste = await dao.yaExiste(dato.codigo);
       if (yaExiste) {
         return {

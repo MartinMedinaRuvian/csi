@@ -43,7 +43,7 @@
   create table if not exists centro_cableado(
     id int(50) not null auto_increment primary key,
     numero int(5) not null,
-    ubicacion char(200),
+    ubicacion char(200) not null,
     ruta_imagen char(255),
     observacion char(255),
     fecha_creacion date not null,

@@ -9,6 +9,14 @@ rutas.get('/', async (req, res) => {
    res.status(control.codigo).json(control.respuesta)
 });
 
+rutas.get('/:id_edificio', async (req, res) => {
+   const {id_edificio} = req.params
+   console.log(id_edificio, 'id_edificio')
+   const ctr = new Control();
+   const control = await ctr.verPorIdEdificio(id_edificio)
+   res.status(control.codigo).json(control.respuesta)
+});
+
 rutas.post('/buscarfiltrado', async (req, res) => {
    const { condicion, buscar } = req.body
    const ctr = new Control();
