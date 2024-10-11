@@ -21,15 +21,22 @@ class ArchivoDAO {
   async guardarArchivoTabla(id_archivo, id_tabla) {
     const nombreTablaGuardar = this.nombreTabla + '_archivo'
     const columnaTablaGuardar = 'id_' + this.nombreTabla
-    const queryGuardar = 'INSERT INTO ' + nombreTablaGuardar + ' (id_archivo,' + columnaTablaGuardar + ') VALUES (?,?)' 
+    const queryGuardar = 'INSERT INTO ' + nombreTablaGuardar + ' (id_archivo,' + columnaTablaGuardar + ') VALUES (?,?)'
     const guardar = await conexion.query(queryGuardar, [id_archivo, id_tabla])
     return guardar.affectedRows > 0 ? guardar.insertId : -1
+  }
+
+  async verTodosArchivosPorIdRegistro(id) {
+    const nombreTablaConsultar = this.nombreTabla + '_archivo'
+    const columnaTablaConsultar = 'id_' + this.nombreTabla
+    const datos = await conexion.query('SELECT a.nombre, a.ruta, a.id FROM ' + nombreTablaConsultar +  ' INNER JOIN archivo a ON a.id = id_archivo WHERE ' + columnaTablaConsultar + '=?', [id])
+    return datos
   }
 
   async verInfoArchivo(id_archivo) {
     const datos = await conexion.query('SELECT nombre, ruta FROM ' + nombreTablaGeneral + ' WHERE id=?', [id_archivo])
     return datos[0]
-}
+  }
 
   async eliminarArchivo(id_archivo) {
     console.log(id_archivo, 'ideli')
@@ -40,7 +47,7 @@ class ArchivoDAO {
   async eliminarArchivoTabla(id_archivo, id_registro_tabla) {
     const nombreTablaEliminar = this.nombreTabla + '_archivo'
     const columnaTablaEliminar = 'id_' + this.nombreTabla
-    const queryEliminar = 'DELETE FROM ' + nombreTablaEliminar + " WHERE id_archivo=" + id_archivo + " AND " +  columnaTablaEliminar + "=" + id_registro_tabla
+    const queryEliminar = 'DELETE FROM ' + nombreTablaEliminar + " WHERE id_archivo=" + id_archivo + " AND " + columnaTablaEliminar + "=" + id_registro_tabla
     console.log(queryEliminar);
     const eliminar = await conexion.query(queryEliminar);
     return eliminar.affectedRows > 0

@@ -38,6 +38,10 @@ class ArchivoControl {
     }
   }
 
+  async verTodosArchivosRegistro(id) {
+    return await new DAO(this.nombreTabla).verTodosArchivosPorIdRegistro(id)
+  }
+
   async verInfoArchivo(idArchivo) {
     return await new DAO(this.nombreTabla).verInfoArchivo(idArchivo)
   }

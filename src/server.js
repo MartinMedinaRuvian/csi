@@ -34,7 +34,7 @@ app.use(express.urlencoded({extended:true}));
  */
 const usuarioEndpoint = require('./endpoints/UsuarioEndpoint')
 const rolEndpoint = require('./endpoints/RolEndpoint')
-const subirArchivosEndpoint = require('./endpoints/SubirArchivoEndpoint')
+const archivosEndpoint = require('./endpoints/ArchivoEndpoint')
 const edificioEndpoint = require('./endpoints/EdificioEndpoint')
 const imagenEndpoint = require('./endpoints/ImagenEndpint')
 const centroCableadoEndpoint = require('./endpoints/CentroCableadoEnpoint')
@@ -44,7 +44,7 @@ const centroCableadoEndpoint = require('./endpoints/CentroCableadoEnpoint')
  */
 app.use('/usuario', usuarioEndpoint)
 app.use('/rol', rolEndpoint)
-app.use('/archivo', verificarToken, subirArchivosEndpoint)
+app.use('/archivo', verificarToken, archivosEndpoint)
 app.use('/imagen', verificarToken, imagenEndpoint)
 app.use('/edificio', verificarToken, edificioEndpoint)
 app.use('/centro_cableado', verificarToken, centroCableadoEndpoint)

@@ -5,6 +5,13 @@ const Control = require('../control/SubirArchivoControl');
 const controlArchivos = new Control()
 const ArchivoControl = require('../control/ArchivoControl');
 
+rutas.get('/:nombre_tabla/:id', async (req, res) => {
+  const {nombre_tabla, id} = req.params
+  const ctr = new ArchivoControl(nombre_tabla);
+  const archivos = await ctr.verTodosArchivosRegistro(id)
+  res.status(200).json(archivos)
+});
+
 rutas.post('/:nombre_tabla/:id_registro_tabla', controlArchivos.upload.single('archivo'), (req, res) => {
   const { nombre_tabla, id_registro_tabla } = req.params
   const archivoControl = new ArchivoControl(nombre_tabla)

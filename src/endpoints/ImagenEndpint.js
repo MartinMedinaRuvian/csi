@@ -20,7 +20,7 @@ rutas.put('/:nombre_tabla/:id', controlArchivos.upload.single('archivo'), async 
    const ctr = new Control(nombre_tabla)
    const infoActualizada = await ctr.actualizarImagen(id, ruta_imagen)
    if (infoActualizada) {
-      res.status(200).json({ mensaje: 'Imagen Actualizada correctamente' });
+      res.status(200).json({ ruta_imagen });
    } else {
       res.status(400).json({ mensaje: 'Error al actualizar imagen' })
    }
