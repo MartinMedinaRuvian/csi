@@ -36,6 +36,7 @@ rutas.post('/cambiarestado', async (req, res) => {
 
 rutas.delete('/:id', async (req, res) => {
    const { id } = req.params
+   console.log(id)
    const ctr = new Control()
    const control = await ctr.eliminar(id)
    res.status(control.codigo).json(control.respuesta)

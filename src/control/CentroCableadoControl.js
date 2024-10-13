@@ -77,7 +77,7 @@ class CentroCableadoControl {
   }
 
   validarDatosObligatorios(dato) {
-    const datosObligatorios = ['numero', 'ubicacion', 'id_edificio']
+    const datosObligatorios = ['numero', 'tipo', 'ubicacion', 'climatizado', 'camaras', 'acceso_llaves', 'acceso_biometrico', 'id_edificio']
     const validarPropiedadesObligatorias = new ValidacionPropiedadesObligatorias()
     const validacionPropiedadObligatoria = validarPropiedadesObligatorias.validar(dato, datosObligatorios)
     return {
@@ -97,6 +97,13 @@ class CentroCableadoControl {
           respuesta: validacionDatosObligatorios.respuesta
         }
       }
+
+      dato.tipo = dato.tipo.toUpperCase()
+      dato.ubicacion = dato.ubicacion.toUpperCase()
+      dato.climatizado = dato.climatizado.toUpperCase()
+      dato.camaras = dato.camaras.toUpperCase()
+      dato.acceso_llaves = dato.acceso_llaves.toUpperCase()
+      dato.acceso_biometrico = dato.acceso_biometrico.toUpperCase()
       dato.estado = 'A'
       dato.fecha_creacion = new FechaUti().fechaActual()
 

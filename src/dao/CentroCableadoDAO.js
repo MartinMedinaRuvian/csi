@@ -33,8 +33,8 @@ class CentroCableadoDAO {
     }
 
     async guardar(dato) {
-        const { numero, ubicacion, ruta_imagen, observacion, fecha_creacion, estado, id_edificio } = dato
-        const datoGuardar = new CentroCableado(numero, ubicacion, ruta_imagen, observacion, fecha_creacion, null, estado, id_edificio)
+        const { numero, tipo, ubicacion, ruta_imagen, observacion, climatizado, camaras, acceso_llaves, acceso_biometrico, fecha_creacion, estado, id_edificio } = dato
+        const datoGuardar = new CentroCableado(numero, tipo, ubicacion, ruta_imagen, observacion, climatizado, camaras, acceso_llaves, acceso_biometrico, fecha_creacion, null, estado, id_edificio)
         const guardar = await conexion.query('INSERT INTO ' + numeroTabla + ' SET ?', [datoGuardar])
         return guardar.affectedRows > 0 ? guardar.insertId : -1
     }

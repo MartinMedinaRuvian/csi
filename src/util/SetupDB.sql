@@ -43,27 +43,34 @@
   create table if not exists centro_cableado(
     id int(50) not null auto_increment primary key,
     numero int(5) not null,
+    tipo char(100) not null,
     ubicacion char(200) not null,
     ruta_imagen char(255),
     observacion char(255),
+    climatizado char(1) not null,
+    camaras char(1) not null,
+    acceso_llaves char(1) not null,
+    acceso_biometrico char(1) not null,
     fecha_creacion date not null,
     fecha_actualizacion date,
     estado char(1) not null,
     id_edificio int(50) not null,
-    constraint centro_cableado_edificio_llave foreign key (id_edificio) references edificio(id)
+    constraint centro_cableado_edificio_llave foreign key (id_edificio) references edificio(id) on delete cascade
   );
 
   create table if not exists gabinete(
     id int(50) not null auto_increment primary key,  
     numero int(5) not null,
-    ubicacion char(200),
+    tipo char(200) not null,
+    tamanio char(10) not null,
     ruta_imagen char(255),
     observacion char(255),
+    aterrizado char(1) not null,
     fecha_creacion date not null,
     fecha_actualizacion date,
     estado char(1) not null,
     id_centro_cableado int(50) not null,
-    constraint gabinete_centro_cableado_llave foreign key (id_centro_cableado) references centro_cableado(id)
+    constraint gabinete_centro_cableado_llave foreign key (id_centro_cableado) references centro_cableado(id) on delete cascade
   );
 
   create table if not exists proyecto(
@@ -95,7 +102,7 @@
     id_gabinete int(100) not null,
     id_proyecto int(100) not null,
     usuario_id int(100) not null,
-    constraint elemento_gabinete_llave foreign key (id_gabinete) references gabinete(id),
+    constraint elemento_gabinete_llave foreign key (id_gabinete) references gabinete(id) on delete cascade,
     constraint elemento_proyecto_llave foreign key (id_proyecto) references proyecto(id),
     constraint elemento_usuario_llave foreign key (usuario_id) references usuario(id)
   );
@@ -127,7 +134,7 @@
     id int(100) not null auto_increment primary key,
     id_edificio int(100) not null,
     id_archivo int(100) not null,
-    constraint edificio_archivo_edificio_llave foreign key (id_edificio) references edificio(id),
+    constraint edificio_archivo_edificio_llave foreign key (id_edificio) references edificio(id) on delete cascade,
     constraint edificio_archivo_archivo_llave foreign key (id_archivo) references archivo(id)
   );
 
