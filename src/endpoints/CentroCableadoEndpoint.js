@@ -9,6 +9,13 @@ rutas.get('/', async (req, res) => {
    res.status(control.codigo).json(control.respuesta)
 });
 
+rutas.get('/info/:id', async (req, res) => {
+   const { id } = req.params
+   const ctr = new Control();
+   const control = await ctr.verInfo(id)
+   res.status(control.codigo).json(control.respuesta)
+});
+
 rutas.get('/:id_edificio', async (req, res) => {
    const {id_edificio} = req.params
    console.log(id_edificio, 'id_edificio')
@@ -32,8 +39,12 @@ rutas.post('/', async (req, res) => {
 
 rutas.put('/', async (req, res) => {
    const ctr = new Control()
-   const control = await ctr.actualizar(req.body)
-   res.status(control.codigo).json(control.respuesta)
+   const actualizado = await ctr.actualizar(req.body)
+   if (actualizado){
+      res.status(200).json({respuesta: 'Actualizado correctamente'})
+   } else {
+      res.status(500).json({respuesta: 'Error al actualizar'})
+   }
 })
 
 rutas.post('/cambiarestado', async (req, res) => {

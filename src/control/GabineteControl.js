@@ -1,8 +1,8 @@
-const DAO = require('../dao/CentroCableadoDAO');
+const DAO = require('../dao/GabineteDAO');
 const ValidacionPropiedadesObligatorias = require('../util/validar_propiedades');
 const FechaUti = require('../util/Fecha')
 
-class CentroCableadoControl {
+class GabineteControl {
 
   async verTodos() {
     const dao = new DAO();
@@ -20,49 +20,10 @@ class CentroCableadoControl {
     }
   }
 
-  async verInfo(id) {
+  async verPorIdCentroCableado(id_centro_cableado) {
     const dao = new DAO();
     try {
-      const datos = await dao.verInfo(id);
-      return {
-        codigo: 200,
-        respuesta: datos
-      }
-    } catch (error) {
-      return {
-        codigo: 500,
-        respuesta: error
-      }
-    }
-  }
-
-  async verPorCodigo(codigo) {
-    const dao = new DAO();
-    try {
-      const datos = await dao.verCentroCableadosPorCodigo(codigo)
-      if (datos.length > 0) {
-        return {
-          codigo: 200,
-          respuesta: datos
-        }
-      } else {
-        return {
-          codigo: 500,
-          respuesta: 'No existe un CentroCableado con el código ' + codigo
-        }
-      }
-    } catch (error) {
-      return {
-        codigo: 500,
-        respuesta: error
-      }
-    }
-  }
-
-  async verPorIdEdificio(id_edificio) {
-    const dao = new DAO();
-    try {
-      const datos = await dao.verPorIdEdificio(id_edificio)
+      const datos = await dao.verPorIdCentroCableado(id_centro_cableado)
       console.log(datos)
       return {
         codigo: 200,
@@ -93,7 +54,7 @@ class CentroCableadoControl {
   }
 
   validarDatosObligatorios(dato) {
-    const datosObligatorios = ['numero', 'tipo', 'ubicacion', 'climatizado', 'camaras', 'acceso_llaves', 'acceso_biometrico', 'id_edificio']
+    const datosObligatorios = ['numero', 'tipo', 'tamanio', 'aterrizado', 'id_centro_cableado']
     const validarPropiedadesObligatorias = new ValidacionPropiedadesObligatorias()
     const validacionPropiedadObligatoria = validarPropiedadesObligatorias.validar(dato, datosObligatorios)
     return {
@@ -115,15 +76,12 @@ class CentroCableadoControl {
       }
 
       dato.tipo = dato.tipo.toUpperCase()
-      dato.ubicacion = dato.ubicacion.toUpperCase()
-      dato.climatizado = dato.climatizado.toUpperCase()
-      dato.camaras = dato.camaras.toUpperCase()
-      dato.acceso_llaves = dato.acceso_llaves.toUpperCase()
-      dato.acceso_biometrico = dato.acceso_biometrico.toUpperCase()
+      dato.tamanio = dato.tamanio.toUpperCase()
+      dato.aterrizado = dato.aterrizado.toUpperCase()
       dato.estado = 'A'
       dato.fecha_creacion = new FechaUti().fechaActual()
 
-      const yaExiste = await dao.yaExiste(dato.numero, dato.id_edificio);
+      const yaExiste = await dao.yaExiste(dato.numero, dato.id_centro_cableado);
       if (yaExiste) {
         return {
           codigo: 500,
@@ -139,7 +97,7 @@ class CentroCableadoControl {
             }
           }
         }
-      }
+      }    
 
     } catch (error) {
       return {
@@ -166,7 +124,7 @@ class CentroCableadoControl {
       }
     }
   }
-
+  
   async cambiarEstado(dato) {
     const { estado, codigo } = dato
     try {
@@ -190,19 +148,26 @@ class CentroCableadoControl {
     }
   }
 
-  async eliminar(id) {
+  async eliminar(codigo) {
     try {
       const dao = new DAO()
-      const eliminado = await dao.eliminar(id);
-      if (eliminado) {
-        return {
-          codigo: 200,
-          respuesta: 'Correcto'
+      if (!await dao.registroTieneVentaRegistrada(codigo)) {
+        const eliminado = await dao.eliminar(codigo);
+        if (eliminado) {
+          return {
+            codigo: 200,
+            respuesta: 'Correcto'
+          }
+        } else {
+          return {
+            codigo: 500,
+            respuesta: 'Error al eliminar'
+          }
         }
       } else {
         return {
           codigo: 500,
-          respuesta: 'Error al eliminar'
+          respuesta: 'El registro tiene al menos una venta registrada, no se puede eliminar'
         }
       }
     } catch (error) {
@@ -216,4 +181,4 @@ class CentroCableadoControl {
 
 }
 
-module.exports = CentroCableadoControl
+module.exports = GabineteControl
