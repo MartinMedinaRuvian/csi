@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+require("dotenv").config();
 
 const DAO = require('../dao/UsuarioDAO');
 const ValidacionPropiedadesObligatorias = require('../util/validar_propiedades');
@@ -22,17 +23,17 @@ class UsuarioControl {
     }
   }
 
-  async verConFiltro (condicion, buscar) {
+  async verConFiltro(condicion, buscar) {
     try {
       const dao = new DAO()
       const datos = await dao.obtenerFiltrado(condicion, buscar)
       return {
-        codigo:200,
-        respuesta:datos
+        codigo: 200,
+        respuesta: datos
       }
     } catch (error) {
       return {
-        codigo:500,
+        codigo: 500,
         respuesta: error
       }
     }
@@ -49,7 +50,7 @@ class UsuarioControl {
   }
 
   validarDatosObligatoriosCambiarPassword(dato) {
-    const datosObligatorios = ['passwordActual', 'password']
+    const datosObligatorios = ['password_super_admin', 'password']
     const validarPropiedadesObligatorias = new ValidacionPropiedadesObligatorias()
     const validacionPropiedadObligatoria = validarPropiedadesObligatorias.validar(dato, datosObligatorios)
     return {
@@ -73,8 +74,9 @@ class UsuarioControl {
           respuesta: validacionDatosObligatorios.respuesta
         }
       }
+      dato.nombre_completo = dato.nombre_completo.toUpperCase()
       dato.email = this.eliminarEspaciosEnBlanco(dato.email)
-      const datoExistente = await dao.verInfo(dato.codigo)
+      const datoExistente = await dao.verInfo(dato.id)
       let verificarExistencia = datoExistente.email !== dato.email
       if (verificarExistencia) {
         const yaExiste = await dao.yaExiste(dato.email)
@@ -85,13 +87,14 @@ class UsuarioControl {
           }
         }
       }
-      if (await dao.actualizar(dato.codigo, dato)) {
+      if (await dao.actualizar(dato)) {
         return {
           codigo: 200,
           respuesta: 'Correcto'
         }
       }
     } catch (error) {
+      console.log(error)
       return {
         codigo: 500,
         respuesta: error
@@ -102,6 +105,7 @@ class UsuarioControl {
   async cambiarPassword(dato) {
     const dao = new DAO()
     try {
+      const passwordSuperAdmin = process.env.SUPER_ADMIN
       const validacionDatosObligatorios = this.validarDatosObligatoriosCambiarPassword(dato)
       if (validacionDatosObligatorios.codigo !== 200) {
         return {
@@ -109,24 +113,29 @@ class UsuarioControl {
           respuesta: validacionDatosObligatorios.respuesta
         }
       }
-      dato.passwordActual = this.eliminarEspaciosEnBlanco(dato.passwordActual)
+      dato.password_super_admin = this.eliminarEspaciosEnBlanco(dato.password_super_admin)
       dato.password = this.eliminarEspaciosEnBlanco(dato.password)
-      const administrador = await dao.verificarUsuarioPorCodigo(dato.codigoadministrador);
-      console.log(dato, 'dato')
-      if (administrador.length > 0) {
-        if (!bcrypt.compareSync(dato.passwordActual, administrador[0].password)) {
+      const administrador = dato.password_super_admin === passwordSuperAdmin
+      console.log(administrador, 'dato')
+      if (administrador) {
+
+        dato.password = bcrypt.hashSync(dato.password, saltRounds)
+        if (await dao.cambiarPassword(dato.id, dato)) {
           return {
-            codigo: 400,
-            respuesta: 'Contraseña de ' + administrador[0].nombre_completo + ' Incorrecta'
+            codigo: 200,
+            respuesta: 'Correcto'
           }
+
         } else {
-          dato.password = bcrypt.hashSync(dato.password, saltRounds)
-          if (await dao.cambiarPassword(dato.codigo, dato)) {
-            return {
-              codigo: 200,
-              respuesta: 'Correcto'
-            }
+          return {
+            codigo: 5000,
+            respuesta: 'Ocurrio un error'
           }
+        }
+      } else {
+        return {
+          codigo: 500,
+          respuesta: 'La contraseña del super admin es incorrecta'
         }
       }
     } catch (error) {
@@ -148,8 +157,10 @@ class UsuarioControl {
         }
       }
       dato.password = this.eliminarEspaciosEnBlanco(dato.password)
+      dato.nombre_completo = dato.nombre_completo.toUpperCase()
       dato.email = this.eliminarEspaciosEnBlanco(dato.email)
       dato.password = bcrypt.hashSync(dato.password, saltRounds);
+      dato.estado = 'A'
       const dao = new DAO();
       const yaExiste = await dao.yaExiste(dato.email);
       if (yaExiste) {
@@ -240,29 +251,23 @@ class UsuarioControl {
     }
   }
 
-  async eliminar(codigo) {
+  async eliminar(id) {
     try {
       const dao = new DAO()
-      if (!await dao.registroTieneVentaRegistrada(codigo)) {
-        const eliminado = await dao.eliminar(codigo);
-        if (eliminado) {
-          return {
-            codigo: 200,
-            respuesta: 'Correcto'
-          }
-        } else {
-          return {
-            codigo: 500,
-            respuesta: 'Error al eliminar'
-          }
+      const eliminado = await dao.eliminar(id);
+      if (eliminado) {
+        return {
+          codigo: 200,
+          respuesta: 'Correcto'
         }
       } else {
         return {
           codigo: 500,
-          respuesta: 'El registro tiene al menos una venta registrada, no se puede eliminar'
+          respuesta: 'Error al eliminar'
         }
       }
     } catch (error) {
+      console.log(error)
       return {
         codigo: 500,
         respuesta: error

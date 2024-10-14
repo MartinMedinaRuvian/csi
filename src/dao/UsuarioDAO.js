@@ -1,7 +1,9 @@
 const Usuario = require('../modelo/Usuario')
 const conexion = require('../util/conexion_mysql');
+const GenerarQueryActualizarDB = require('../util/generar_query_actualizar_db')
 
 const nombreTabla = 'usuario';
+const idPropiedad = 'id'
 
 class UsuarioDAO{
 
@@ -42,31 +44,34 @@ class UsuarioDAO{
         return dato.length > 0 ? dato : [];
     }
 
-    async actualizar(id, datos){
-        datos.nombre_completo = datos.nombre_completo.toUpperCase()
-        const { nombre_completo, email, rol_id } = datos
-        const actualizar = await conexion.query('UPDATE ' + nombreTabla + ' SET nombre_completo=?, email=?, rol_id=? WHERE id=?', [nombre_completo, email, rol_id, id])
-        return actualizar.affectedRows > 0
+    async actualizar(dato){
+        console.log(dato)
+        const generarQueryActualizarDB = new GenerarQueryActualizarDB(dato, nombreTabla, idPropiedad, Usuario)
+        const consulta = await generarQueryActualizarDB.consultaGenerada()
+        const valores = await generarQueryActualizarDB.valoresGenerados()
+        try {
+            const resultado = await conexion.query(consulta, valores);
+            return resultado.affectedRows > 0;
+        } catch (error) {
+            console.error('Error al actualizar:', error);
+        }
+        return false
     }
 
     async cambiarPassword(id, datos){
         const { password } = datos
-        const actualizar = await conexion.query('UPDATE ' + nombreTabla + ' SET password=? WHERE id=?', [password, id])
+        const actualizar = await conexion.query('UPDATE ' + nombreTabla + ' SET password=? WHERE ' + idPropiedad + '=?', [password, id])
         return actualizar.affectedRows > 0
     }
 
     async cambiarEstado(estado, id){      
-        const cambiar = await conexion.query('UPDATE ' + nombreTabla + ' SET estado=? WHERE id=?', [estado, id])
+        const cambiar = await conexion.query('UPDATE ' + nombreTabla + ' SET estado=? WHERE ' + idPropiedad + '=?', [estado, id])
         return cambiar.affectedRows > 0
     }
 
-    async registroTieneVentaRegistrada (id) {
-        const esta = await conexion.query('SELECT usuario_id FROM venta WHERE usuario_id=?', [id]);   
-        return esta.length > 0
-    }
-
     async eliminar(id){  
-        const eliminar = await conexion.query('DELETE FROM ' + nombreTabla + ' WHERE id=?', [id]);
+        console.log(id, 'eliminar')
+        const eliminar = await conexion.query('DELETE FROM ' + nombreTabla + ' WHERE ' + idPropiedad + '=?', [id]);
         return eliminar.affectedRows > 0
     }
 }
