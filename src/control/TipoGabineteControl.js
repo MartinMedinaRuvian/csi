@@ -1,30 +1,14 @@
-const DAO = require('../dao/GabineteDAO');
+const DAO = require('../dao/TipoGabineteDAO');
 const ValidacionPropiedadesObligatorias = require('../util/validar_propiedades');
+const StringUtil = require('../util/string_util')
 const FechaUti = require('../util/Fecha')
 
-class GabineteControl {
+class TipoGabineteControl {
 
   async verTodos() {
     const dao = new DAO();
     try {
       const datos = await dao.obtenerTodos();
-      return {
-        codigo: 200,
-        respuesta: datos
-      }
-    } catch (error) {
-      return {
-        codigo: 500,
-        respuesta: error
-      }
-    }
-  }
-
-  async verPorIdCentroCableado(id_centro_cableado) {
-    const dao = new DAO();
-    try {
-      const datos = await dao.verPorIdCentroCableado(id_centro_cableado)
-      console.log(datos)
       return {
         codigo: 200,
         respuesta: datos
@@ -54,7 +38,7 @@ class GabineteControl {
   }
 
   validarDatosObligatorios(dato) {
-    const datosObligatorios = ['numero', 'tamanio', 'aterrizado', 'id_centro_cableado', 'id_tipo_gabinete']
+    const datosObligatorios = ['descripcion']
     const validarPropiedadesObligatorias = new ValidacionPropiedadesObligatorias()
     const validacionPropiedadObligatoria = validarPropiedadesObligatorias.validar(dato, datosObligatorios)
     return {
@@ -62,7 +46,6 @@ class GabineteControl {
       respuesta: validacionPropiedadObligatoria.respuesta
     }
   }
-
 
   async guardar(dato) {
     const dao = new DAO()
@@ -74,30 +57,26 @@ class GabineteControl {
           respuesta: validacionDatosObligatorios.respuesta
         }
       }
-
-      dato.tamanio = dato.tamanio.toUpperCase()
-      dato.aterrizado = dato.aterrizado.toUpperCase()
-      dato.estado = 'A'
-      dato.fecha_creacion = new FechaUti().fechaActual()
-
-      const yaExiste = await dao.yaExiste(dato.numero, dato.id_centro_cableado);
+      const yaExiste = await dao.yaExiste(dato.descripcion);
       if (yaExiste) {
         return {
           codigo: 500,
           respuesta: 'Ya existe'
         }
       } else {
-        const id = await dao.guardar(dato);
-        if (id > -1) {
+        dato.descripcion = dato.descripcion.toUpperCase()
+        dato.estado = 'A'
+        dato.fecha_creacion = new FechaUti().fechaActual()
+        const idGuardar = await dao.guardar(dato);
+        if (idGuardar > -1) {
           return {
             codigo: 200,
             respuesta: {
-              id: id
+              id: idGuardar
             }
           }
         }
-      }    
-
+      }
     } catch (error) {
       console.log(error)
       return {
@@ -110,11 +89,20 @@ class GabineteControl {
   async actualizar(dato) {
     const dao = new DAO()
     try {
+      dato.descripcion = dato.nombre.toUpperCase()
       dato.fecha_actualizacion = new FechaUti().fechaActual()
+      if (dato.descripcion != null && dato.descripcion != undefined){
+        dato.descripcion = dato.nombre.toUpperCase()
+      }
       if (await dao.actualizar(dato)) {
         return {
           codigo: 200,
           respuesta: 'Correcto'
+        }
+      } else {
+        return {
+          codigo: 500,
+          respuesta: 'Ocurrio un error'
         }
       }
     } catch (error) {
@@ -124,12 +112,12 @@ class GabineteControl {
       }
     }
   }
-  
+
   async cambiarEstado(dato) {
-    const { estado, codigo } = dato
+    const { estado, id } = dato
     try {
       const dao = new DAO()
-      if (await dao.cambiarEstado(estado, codigo)) {
+      if (await dao.cambiarEstado(estado, id)) {
         return {
           codigo: 200,
           respuesta: 'Correcto'
@@ -148,26 +136,19 @@ class GabineteControl {
     }
   }
 
-  async eliminar(codigo) {
+  async eliminar(id) {
     try {
       const dao = new DAO()
-      if (!await dao.registroTieneVentaRegistrada(codigo)) {
-        const eliminado = await dao.eliminar(codigo);
-        if (eliminado) {
-          return {
-            codigo: 200,
-            respuesta: 'Correcto'
-          }
-        } else {
-          return {
-            codigo: 500,
-            respuesta: 'Error al eliminar'
-          }
+      const eliminado = await dao.eliminar(id);
+      if (eliminado) {
+        return {
+          codigo: 200,
+          respuesta: 'Correcto'
         }
       } else {
         return {
           codigo: 500,
-          respuesta: 'El registro tiene al menos una venta registrada, no se puede eliminar'
+          respuesta: 'Error al eliminar'
         }
       }
     } catch (error) {
@@ -181,4 +162,4 @@ class GabineteControl {
 
 }
 
-module.exports = GabineteControl
+module.exports = TipoGabineteControl

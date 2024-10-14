@@ -27,14 +27,14 @@ class GabineteDAO {
         return datos[0]
     }
 
-    async yaExiste(numero, id_edificio) {
-        const yaExiste = await conexion.query('SELECT id FROM ' + numeroTabla + ' WHERE numero=? AND id_edificio=?', [numero, id_edificio])
+    async yaExiste(numero, id_centro_cableado) {
+        const yaExiste = await conexion.query('SELECT id FROM ' + numeroTabla + ' WHERE numero=? AND id_centro_cableado=?', [numero, id_centro_cableado])
         return yaExiste.length > 0
     }
 
     async guardar(dato) {
-        const { numero, tipo, tamanio, ruta_imagen, observacion, aterrizado, fecha_creacion, estado, id_centro_cableado } = dato
-        const datoGuardar = new Gabinete(numero, tipo, tamanio, ruta_imagen, observacion, aterrizado, fecha_creacion, null, estado, id_centro_cableado)
+        const { numero, tamanio, ruta_imagen, observacion, aterrizado, fecha_creacion, estado, id_centro_cableado, id_tipo_gabinete } = dato
+        const datoGuardar = new Gabinete(numero, tamanio, ruta_imagen, observacion, aterrizado, fecha_creacion, null, estado, id_centro_cableado, id_tipo_gabinete)
         const guardar = await conexion.query('INSERT INTO ' + numeroTabla + ' SET ?', [datoGuardar])
         return guardar.affectedRows > 0 ? guardar.insertId : -1
     }

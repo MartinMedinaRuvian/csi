@@ -39,6 +39,7 @@ const edificioEndpoint = require('./endpoints/EdificioEndpoint')
 const imagenEndpoint = require('./endpoints/ImagenEndpoint')
 const centroCableadoEndpoint = require('./endpoints/CentroCableadoEndpoint')
 const gabineteEndpoint = require('./endpoints/GabineteEndpoint')
+const tipoGabineteEndpoint = require('./endpoints/TipoGabineteEndpoint')
 
 /**
  * configuro las rutas del servidor
@@ -50,6 +51,7 @@ app.use('/imagen', verificarToken, imagenEndpoint)
 app.use('/edificio', verificarToken, edificioEndpoint)
 app.use('/centro_cableado', verificarToken, centroCableadoEndpoint)
 app.use('/gabinete', verificarToken, gabineteEndpoint)
+app.use('/tipo_gabinete', verificarToken, tipoGabineteEndpoint)
 
 
 module.exports = app;

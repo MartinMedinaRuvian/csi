@@ -58,11 +58,26 @@
     constraint centro_cableado_edificio_llave foreign key (id_edificio) references edificio(id) on delete cascade
   );
 
+  create table if not exists tipo_gabinete(
+    id int(5) not null auto_increment primary key,
+    descripcion char(200) not null,
+    fecha_creacion date not null,
+    fecha_actualizacion date,
+    estado char(1) not null
+  );
+
+  insert into tipo_gabinete(descripcion, fecha_creacion, estado) 
+  values 
+  ('Gabinete para Servidores', '2024-10-04', 'A'),
+  ('Gabinete para Equipos de Red (Networking)', '2024-10-04', 'A'),
+  ('Gabinete Mural', '2024-10-04', 'A'),
+  ('Gabinete Open Rack (Rack Abierto)', '2024-10-04', 'A'),
+  ('Gabinete para Cableado Estructurado', '2024-10-04', 'A');
+
   create table if not exists gabinete(
     id int(50) not null auto_increment primary key,  
     numero int(5) not null,
-    tipo char(200) not null,
-    tamanio char(10) not null,
+    tamanio char(60) not null,
     ruta_imagen char(255),
     observacion char(255),
     aterrizado char(1) not null,
@@ -70,7 +85,9 @@
     fecha_actualizacion date,
     estado char(1) not null,
     id_centro_cableado int(50) not null,
-    constraint gabinete_centro_cableado_llave foreign key (id_centro_cableado) references centro_cableado(id) on delete cascade
+    id_tipo_gabinete int(5) not null,
+    constraint gabinete_centro_cableado_llave foreign key (id_centro_cableado) references centro_cableado(id) on delete cascade,
+    constraint gabinete_tipo_gabinete_llave foreign key (id_tipo_gabinete) references tipo_gabinete(id) on delete cascade
   );
 
   create table if not exists proyecto(
