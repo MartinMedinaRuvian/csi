@@ -21,6 +21,22 @@ class EdificioControl {
     }
   }
 
+  async verInfo(id) {
+    const dao = new DAO();
+    try {
+      const datos = await dao.verInfo(id);
+      return {
+        codigo: 200,
+        respuesta: datos
+      }
+    } catch (error) {
+      return {
+        codigo: 500,
+        respuesta: error
+      }
+    }
+  }
+
   async verPorCodigo(codigo) {
     const dao = new DAO();
     try {
