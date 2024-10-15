@@ -11,6 +11,11 @@ class TipoGabineteDAO {
         return datos
     }
 
+    async verPorId(id) {
+        const datos = await conexion.query('SELECT * FROM ' + nombreTabla + ' WHERE ' + idPropiedad + '=' + id)
+        return datos[0]
+    }
+
     async yaExiste(descripcion) {
         const yaExiste = await conexion.query('SELECT descripcion FROM ' + nombreTabla + ' WHERE descripcion=?', [descripcion])
         return yaExiste.length > 0

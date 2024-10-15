@@ -20,6 +20,22 @@ class GabineteControl {
     }
   }
 
+  async verInfo(id) {
+    const dao = new DAO();
+    try {
+      const datos = await dao.verInfo(id);
+      return {
+        codigo: 200,
+        respuesta: datos
+      }
+    } catch (error) {
+      return {
+        codigo: 500,
+        respuesta: error
+      }
+    }
+  }
+
   async verPorIdCentroCableado(id_centro_cableado) {
     const dao = new DAO();
     try {
@@ -96,7 +112,7 @@ class GabineteControl {
             }
           }
         }
-      }    
+      }
 
     } catch (error) {
       console.log(error)
@@ -116,15 +132,21 @@ class GabineteControl {
           codigo: 200,
           respuesta: 'Correcto'
         }
+      } else {
+        return {
+          codigo: 500,
+          respuesta: 'Error al actualizar'
+        }
       }
     } catch (error) {
+      console.log(error)
       return {
         codigo: 500,
         respuesta: error
       }
     }
   }
-  
+
   async cambiarEstado(dato) {
     const { estado, codigo } = dato
     try {
@@ -151,26 +173,21 @@ class GabineteControl {
   async eliminar(codigo) {
     try {
       const dao = new DAO()
-      if (!await dao.registroTieneVentaRegistrada(codigo)) {
-        const eliminado = await dao.eliminar(codigo);
-        if (eliminado) {
-          return {
-            codigo: 200,
-            respuesta: 'Correcto'
-          }
-        } else {
-          return {
-            codigo: 500,
-            respuesta: 'Error al eliminar'
-          }
+      const eliminado = await dao.eliminar(codigo);
+      if (eliminado) {
+        return {
+          codigo: 200,
+          respuesta: 'Correcto'
         }
       } else {
         return {
           codigo: 500,
-          respuesta: 'El registro tiene al menos una venta registrada, no se puede eliminar'
+          respuesta: 'Error al eliminar'
         }
       }
+
     } catch (error) {
+      console.log(error)
       return {
         codigo: 500,
         respuesta: error

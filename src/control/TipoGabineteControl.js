@@ -21,6 +21,22 @@ class TipoGabineteControl {
     }
   }
 
+  async verPorId(id) {
+    const dao = new DAO();
+    try {
+      const datos = await dao.verPorId(id);
+      return {
+        codigo: 200,
+        respuesta: datos
+      }
+    } catch (error) {
+      return {
+        codigo: 500,
+        respuesta: error
+      }
+    }
+  }
+
   async verConFiltro(condicion, buscar) {
     try {
       const dao = new DAO()

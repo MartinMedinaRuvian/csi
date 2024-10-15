@@ -9,6 +9,14 @@ rutas.get('/', async (req, res) => {
    res.status(control.codigo).json(control.respuesta)
 });
 
+rutas.get('/info/:id', async (req, res) => {
+   const { id } = req.params
+   const ctr = new Control();
+   const control = await ctr.verInfo(id)
+   res.status(control.codigo).json(control.respuesta)
+});
+
+
 rutas.get('/:id_centro_cableado', async (req, res) => {
    const {id_centro_cableado} = req.params
    console.log(id_centro_cableado, 'id_centro_cableado')
