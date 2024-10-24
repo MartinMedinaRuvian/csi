@@ -1,11 +1,11 @@
-const Gabinete = require('../modelo/Gabinete')
+const Elemento = require('../modelo/Elemento')
 const conexion = require('../util/conexion_mysql')
 const GenerarQueryActualizarDB = require('../util/generar_query_actualizar_db')
 
-const nombreTabla = 'gabinete'
+const nombreTabla = 'elemento'
 const idPropiedad = 'id'
 
-class GabineteDAO {
+class ElementoDAO {
 
     async obtenerTodos() {
         const datos = await conexion.query("SELECT * FROM " + nombreTabla + " WHERE estado='A'" + " ORDER BY " + idPropiedad + " DESC")
@@ -17,8 +17,8 @@ class GabineteDAO {
         return datos
     }
 
-    async verPorIdCentroCableado(id_centro_cableado) {
-        const datos = await conexion.query('SELECT * FROM ' + nombreTabla + ' WHERE id_centro_cableado=?' + "AND estado='A'" + " ORDER BY numero DESC", [id_centro_cableado])
+    async verPorIdGabinete(id_gabinete) {
+        const datos = await conexion.query('SELECT * FROM ' + nombreTabla + ' WHERE id_gabinete=?' + "AND estado='A'" + " ORDER BY id DESC", [id_gabinete])
         return datos
     }
 
@@ -27,14 +27,14 @@ class GabineteDAO {
         return datos[0]
     }
 
-    async yaExiste(numero, id_centro_cableado) {
-        const yaExiste = await conexion.query('SELECT id FROM ' + nombreTabla + ' WHERE numero=? AND id_centro_cableado=?', [numero, id_centro_cableado])
+    async yaExiste(serial, id_gabinete) {
+        console.log(serial, id_gabinete, 'ya existe')
+        const yaExiste = await conexion.query('SELECT serial FROM ' + nombreTabla + ' WHERE serial=? AND id_gabinete=?', [serial, id_gabinete])
         return yaExiste.length > 0
     }
 
     async guardar(dato) {
-        const { numero, tamanio, ruta_imagen, observacion, aterrizado, fecha_creacion, estado, id_centro_cableado, id_tipo_gabinete } = dato
-        const datoGuardar = new Gabinete(numero, tamanio, ruta_imagen, observacion, aterrizado, fecha_creacion, null, estado, id_centro_cableado, id_tipo_gabinete)
+        const datoGuardar = new Elemento(dato)
         const guardar = await conexion.query('INSERT INTO ' + nombreTabla + ' SET ?', [datoGuardar])
         return guardar.affectedRows > 0 ? guardar.insertId : -1
     }
@@ -46,7 +46,7 @@ class GabineteDAO {
     
     async actualizar(dato) {
         console.log(dato, 'd')
-        const generarQueryActualizarDB = new GenerarQueryActualizarDB(dato, nombreTabla, idPropiedad, Gabinete)
+        const generarQueryActualizarDB = new GenerarQueryActualizarDB(dato, nombreTabla, idPropiedad, Elemento)
         const consulta = await generarQueryActualizarDB.consultaGenerada()
         const valores = await generarQueryActualizarDB.valoresGenerados()
         try {
@@ -65,4 +65,4 @@ class GabineteDAO {
 
 }
 
-module.exports = GabineteDAO
+module.exports = ElementoDAO

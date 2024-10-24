@@ -1,8 +1,9 @@
-const DAO = require('../dao/GabineteDAO');
+const DAO = require('../dao/ElementoDAO');
 const ValidacionPropiedadesObligatorias = require('../util/validar_propiedades');
+const StringUtil = require('../util/string_util')
 const FechaUti = require('../util/Fecha')
 
-class GabineteControl {
+class ElementoControl {
 
   async verTodos() {
     const dao = new DAO();
@@ -36,10 +37,10 @@ class GabineteControl {
     }
   }
 
-  async verPorIdCentroCableado(id_centro_cableado) {
+  async verPorIdGabinete(id_gabinete) {
     const dao = new DAO();
     try {
-      const datos = await dao.verPorIdCentroCableado(id_centro_cableado)
+      const datos = await dao.verPorIdGabinete(id_gabinete)
       console.log(datos)
       return {
         codigo: 200,
@@ -70,7 +71,7 @@ class GabineteControl {
   }
 
   validarDatosObligatorios(dato) {
-    const datosObligatorios = ['numero', 'tamanio', 'aterrizado', 'id_centro_cableado', 'id_tipo_gabinete']
+    const datosObligatorios = ['nombre', 'id_tipo_elemento', 'id_tipo_dispositivo', 'id_gabinete', 'id_usuario']
     const validarPropiedadesObligatorias = new ValidacionPropiedadesObligatorias()
     const validacionPropiedadObligatoria = validarPropiedadesObligatorias.validar(dato, datosObligatorios)
     return {
@@ -91,12 +92,22 @@ class GabineteControl {
         }
       }
 
-      dato.tamanio = dato.tamanio.toUpperCase()
-      dato.aterrizado = dato.aterrizado.toUpperCase()
+      const stringUtil = new StringUtil()
+      dato.nombre = stringUtil.transformarTodoEnMayusculas(dato.nombre)
+      dato.referencia = stringUtil.transformarTodoEnMayusculas(dato.referencia)
+      dato.serial = stringUtil.transformarTodoEnMayusculas(dato.serial)
+      dato.modelo = stringUtil.transformarTodoEnMayusculas(dato.modelo)
+      dato.os = stringUtil.transformarTodoEnMayusculas(dato.os)
+      dato.version_os = stringUtil.transformarTodoEnMayusculas(dato.version_os)
+      dato.mac = stringUtil.transformarTodoEnMayusculas(dato.mac)
+      dato.gateway = stringUtil.transformarTodoEnMayusculas(dato.gateway)
+      dato.ip_v4 = stringUtil.transformarTodoEnMayusculas(dato.ip_v4)
+      dato.ip_v6 = stringUtil.transformarTodoEnMayusculas(dato.ip_v6)
+      dato.codigo_inventario = stringUtil.transformarTodoEnMayusculas(dato.codigo_inventario)
+      
       dato.estado = 'A'
       dato.fecha_creacion = new FechaUti().fechaActual()
-
-      const yaExiste = await dao.yaExiste(dato.numero, dato.id_centro_cableado);
+      const yaExiste = await dao.yaExiste(dato.serial, dato.id_gabinete);
       if (yaExiste) {
         return {
           codigo: 500,
@@ -126,6 +137,20 @@ class GabineteControl {
   async actualizar(dato) {
     const dao = new DAO()
     try {
+
+      const stringUtil = new StringUtil()
+      dato.nombre = stringUtil.transformarTodoEnMayusculas(dato.nombre)
+      dato.referencia = stringUtil.transformarTodoEnMayusculas(dato.referencia)
+      dato.serial = stringUtil.transformarTodoEnMayusculas(dato.serial)
+      dato.modelo = stringUtil.transformarTodoEnMayusculas(dato.modelo)
+      dato.os = stringUtil.transformarTodoEnMayusculas(dato.os)
+      dato.version_os = stringUtil.transformarTodoEnMayusculas(dato.version_os)
+      dato.mac = stringUtil.transformarTodoEnMayusculas(dato.mac)
+      dato.gateway = stringUtil.transformarTodoEnMayusculas(dato.gateway)
+      dato.ip_v4 = stringUtil.transformarTodoEnMayusculas(dato.ip_v4)
+      dato.ip_v6 = stringUtil.transformarTodoEnMayusculas(dato.ip_v6)
+      dato.codigo_inventario = stringUtil.transformarTodoEnMayusculas(dato.codigo_inventario)
+
       dato.fecha_actualizacion = new FechaUti().fechaActual()
       console.log(dato)
       if (await dao.actualizar(dato)) {
@@ -199,4 +224,4 @@ class GabineteControl {
 
 }
 
-module.exports = GabineteControl
+module.exports = ElementoControl

@@ -1,6 +1,5 @@
 const DAO = require('../dao/TipoGabineteDAO');
 const ValidacionPropiedadesObligatorias = require('../util/validar_propiedades');
-const StringUtil = require('../util/string_util')
 const FechaUti = require('../util/Fecha')
 
 class TipoGabineteControl {

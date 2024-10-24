@@ -5,6 +5,10 @@ class StringUtil {
 			return valor.replace(patron, '')
 	}
 
+	transformarTodoEnMayusculas(valor){
+		return valor != null && valor != undefined ? valor.toUpperCase() : valor
+	}
+
 }
 
 module.exports = StringUtil
