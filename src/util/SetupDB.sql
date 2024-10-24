@@ -42,7 +42,7 @@
 
   create table if not exists centro_cableado(
     id int(50) not null auto_increment primary key,
-    numero int(5) not null unique,
+    numero int(5) not null,
     tipo char(100) not null,
     ubicacion char(200) not null,
     ruta_imagen char(255),
@@ -76,7 +76,7 @@
 
   create table if not exists gabinete(
     id int(50) not null auto_increment primary key,  
-    numero int(5) not null unique,
+    numero int(5) not null,
     tamanio char(60) not null,
     ruta_imagen char(255),
     observacion char(255),
@@ -137,7 +137,7 @@
     id_tipo_elemento int(2) not null,
     id_tipo_dispositivo int(2) not null,
     referencia char(200),
-    serial char(100) not null unique,
+    serial char(100) not null,
     modelo char(200),
     observacion char(255),
     os char(50),
