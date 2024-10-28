@@ -1,8 +1,8 @@
-const Elemento = require('../modelo/ElementoActivo')
+const Elemento = require('../modelo/ElementoPasivo')
 const conexion = require('../util/conexion_mysql')
 const GenerarQueryActualizarDB = require('../util/generar_query_actualizar_db')
 
-const nombreTabla = 'elemento_activo'
+const nombreTabla = 'elemento_pasivo'
 const idPropiedad = 'id'
 
 class ElementoDAO {
@@ -18,12 +18,12 @@ class ElementoDAO {
     }
 
     async verInfoPrincipalPorIdGabinete(id_gabinete) {
-        const datos = await conexion.query('SELECT e.id, e.descripcion, e.codigo, e.serial, e.estado, e.id_tipo_modelo, e.id_tipo_marca, tr.descripcion AS tipo_referencia, tm.descripcion AS tipo_modelo, tmr.descripcion AS tipo_marca FROM ' + nombreTabla + ' e INNER JOIN tipo_referencia tr ON tr.id = e.id_tipo_referencia INNER JOIN tipo_modelo tm ON tm.id = e.id_tipo_modelo INNER JOIN tipo_marca tmr ON tmr.id = e.id_tipo_marca WHERE e.id_gabinete=?' + " AND e.estado='A'" + " ORDER BY e.codigo ASC", [id_gabinete])
+        const datos = await conexion.query('SELECT e.id, e.descripcion, e.codigo, e.estado FROM ' + nombreTabla + ' e WHERE e.id_gabinete=?' + " AND e.estado='A'" + " ORDER BY e.codigo ASC", [id_gabinete])
         return datos
     }
 
     async verPorIdGabinete(id_gabinete) {
-        const datos = await conexion.query('SELECT e.id, e.descripcion, e.codigo, e.serial, e.observacion, e.codigo_inventario, e.estado, e.os, e.version_os, e.mac, e.gateway, e.ip_v4, e.ip_v6, e.cantidad_puertos_por_defecto, e.puerto_logico_por_defecto, e.puerto_fisico_por_defecto, e.ruta_imagen, e.fecha_creacion, e.fecha_actualizacion, e.id_gabinete, e.id_usuario, e.id_tipo_modelo, e.id_tipo_marca, tr.descripcion AS tipo_referencia, tm.descripcion AS tipo_modelo, tmr.descripcion AS tipo_marca FROM ' + nombreTabla + ' e INNER JOIN tipo_referencia tr ON tr.id = e.id_tipo_referencia INNER JOIN tipo_modelo tm ON tm.id = e.id_tipo_modelo INNER JOIN tipo_marca tmr ON tmr.id = e.id_tipo_marca WHERE e.id_gabinete=?' + " AND e.estado='A'" + " ORDER BY e.codigo ASC", [id_gabinete])
+        const datos = await conexion.query('SELECT e.id, e.descripcion, e.codigo, e.observacion, e.codigo_inventario, e.categoria, e.numero_puertos, e.tipo_conector, e.ruta_imagen, e.fecha_creacion, e.fecha_actualizacion, e.estado, e.id_gabinete, e.id_usuario FROM ' + nombreTabla + ' e WHERE e.id_gabinete=?' + " AND e.estado='A'" + " ORDER BY e.codigo ASC", [id_gabinete])
         return datos
     }
 

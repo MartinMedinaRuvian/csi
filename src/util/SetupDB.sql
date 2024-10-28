@@ -162,26 +162,12 @@ values ('Cisco', '2024-10-25', 'A'),
        ('Fortinet', '2024-10-25', 'A'),
        ('HP Aruba', '2024-10-25', 'A');
 
-
-  create table if not exists elemento(
+  create table if not exists elemento_activo(
     id int(20) not null auto_increment primary key,
     descripcion char(200) not null,
     codigo char(100) not null,
     observacion char(255),
     codigo_inventario char(100),
-    ruta_imagen char(255),
-    fecha_creacion date not null,
-    fecha_actualizacion date,
-    estado char(1) not null,
-    id_gabinete int(100) not null,
-    id_usuario int(100) not null,
-    constraint elemento_gabinete_llave foreign key (id_gabinete) references gabinete(id) on delete cascade,
-    constraint elemento_usuario_llave foreign key (id_usuario) references usuario(id) on delete cascade
-  );
-
-  create table if not exists elemento_activo(
-    id int(20) not null auto_increment primary key,
-    id_elemento int(2) not null,
     id_tipo_referencia int(50) not null,
     id_tipo_modelo int(50) not null,
     id_tipo_marca int(50) not null,
@@ -195,7 +181,14 @@ values ('Cisco', '2024-10-25', 'A'),
     cantidad_puertos_por_defecto int,
     puerto_logico_por_defecto int,
     puerto_fisico_por_defecto int,
-    constraint elemento_activo_elemento_llave foreign key (id_elemento) references elemento(id) on delete cascade,
+    ruta_imagen char(255),
+    fecha_creacion date not null,
+    fecha_actualizacion date,
+    estado char(1) not null,
+    id_gabinete int(100) not null,
+    id_usuario int(100) not null,
+    constraint elemento_activo_gabinete_llave foreign key (id_gabinete) references gabinete(id) on delete cascade,
+    constraint elemento_activo_usuario_llave foreign key (id_usuario) references usuario(id) on delete cascade,
     constraint elemento_activo_tipo_referencia_llave foreign key (id_tipo_referencia) references tipo_referencia(id) on delete cascade,
     constraint elemento_activo_tipo_modelo_llave foreign key (id_tipo_modelo) references tipo_modelo(id) on delete cascade,
     constraint elemento_activo_tipo_marca_llave foreign key (id_tipo_marca) references tipo_marca(id) on delete cascade
@@ -203,19 +196,37 @@ values ('Cisco', '2024-10-25', 'A'),
 
   create table if not exists elemento_pasivo(
     id int(20) not null auto_increment primary key,
-    id_elemento int(2) not null, 
-    categoria char(100) not null,
+    descripcion char(200) not null,
+    codigo char(100) not null,
+    observacion char(255),
+    codigo_inventario char(100),
+    categoria char(100),
     numero_puertos int,
     tipo_conector char(50),
-    constraint elemento_pasivo_elemento_llave foreign key (id_elemento) references elemento(id) on delete cascade
+    ruta_imagen char(255),
+    fecha_creacion date not null,
+    fecha_actualizacion date,
+    estado char(1) not null,
+    id_gabinete int(100) not null,
+    id_usuario int(100) not null,
+    constraint elemento_pasivo_gabinete_llave foreign key (id_gabinete) references gabinete(id) on delete cascade,
+    constraint elemento_pasivo_usuario_llave foreign key (id_usuario) references usuario(id) on delete cascade
   );
   
-  create table if not exists proyecto_elemento(
+  create table if not exists proyecto_elemento_activo(
     id int(100) not null auto_increment primary key,
     id_proyecto int(100) not null,
     id_elemento int(100) not null,
-    constraint proyecto_elemento_proyecto_llave foreign key (id_proyecto) references proyecto(id) on delete cascade,
-    constraint proyecto_elemento_elemento_llave foreign key (id_elemento) references elemento(id) on delete cascade
+    constraint proyecto_elemento_activo_proyecto_llave foreign key (id_proyecto) references proyecto(id) on delete cascade,
+    constraint proyecto_elemento_activo_elemento_llave foreign key (id_elemento) references elemento_activo(id) on delete cascade
+  );
+
+  create table if not exists proyecto_elemento_activo(
+    id int(100) not null auto_increment primary key,
+    id_proyecto int(100) not null,
+    id_elemento int(100) not null,
+    constraint proyecto_elemento_pasivo_proyecto_llave foreign key (id_proyecto) references proyecto(id) on delete cascade,
+    constraint proyecto_elemento_pasivo_elemento_llave foreign key (id_elemento) references elemento_pasivo(id) on delete cascade
   );
 
   create table if not exists proyecto_centro_cableado(
@@ -225,7 +236,6 @@ values ('Cisco', '2024-10-25', 'A'),
     constraint proyecto_centro_cableado_proyecto_llave foreign key (id_proyecto) references proyecto(id) on delete cascade,
     constraint proyecto_centro_cableado_centro_cableado_llave foreign key (id_centro_cableado) references centro_cableado(id) on delete cascade
   );
-
 
   create table if not exists archivo(
     id int(100) not null auto_increment primary key,
@@ -268,12 +278,20 @@ values ('Cisco', '2024-10-25', 'A'),
     constraint gabinete_archivo_archivo_llave foreign key (id_archivo) references archivo(id) on delete cascade
   );
 
-  create table if not exists elemento_archivo(
+  create table if not exists elemento_activo_archivo(
     id int(100) not null auto_increment primary key,
     id_elemento int(100) not null,
     id_archivo int(100) not null,
-    constraint elemento_archivo_elemento_llave foreign key (id_elemento) references elemento(id) on delete cascade,
-    constraint elemento_archivo_archivo_llave foreign key (id_archivo) references archivo(id) on delete cascade
+    constraint elemento_activo_archivo_elemento_llave foreign key (id_elemento) references elemento_activo(id) on delete cascade,
+    constraint elemento_activo_archivo_archivo_llave foreign key (id_archivo) references archivo(id) on delete cascade
+  );
+
+  create table if not exists elemento_pasivo_archivo(
+    id int(100) not null auto_increment primary key,
+    id_elemento int(100) not null,
+    id_archivo int(100) not null,
+    constraint elemento_pasivo_archivo_elemento_llave foreign key (id_elemento) references elemento_pasivo(id) on delete cascade,
+    constraint elemento_pasivo_archivo_archivo_llave foreign key (id_archivo) references archivo(id) on delete cascade
   );
 
   create table if not exists proyecto_archivo(
@@ -284,10 +302,18 @@ values ('Cisco', '2024-10-25', 'A'),
     constraint proyecto_archivo_archivo_llave foreign key (id_archivo) references archivo(id) on delete cascade
   );
 
-  create table if not exists elemento_mantenimiento(
+  create table if not exists mantenimiento_elemento_activo(
     id int(100) not null auto_increment primary key,
     id_elemento int(100) not null,
     id_mantenimiento int(100) not null,
-    constraint elemento_mantenimiento_elemento_llave foreign key (id_elemento) references elemento(id) on delete cascade,
-    constraint elemento_mantenimiento_mantenimiento_llave foreign key (id_mantenimiento) references mantenimiento(id) on delete cascade
+    constraint mantenimiento_elemento_activo_elemento_activo_llave foreign key (id_elemento) references elemento_activo(id) on delete cascade,
+    constraint mantenimiento_elemento_activo_mantenimiento_llave foreign key (id_mantenimiento) references mantenimiento(id) on delete cascade
+  );
+
+  create table if not exists mantenimiento_elemento_pasivo(
+    id int(100) not null auto_increment primary key,
+    id_elemento int(100) not null,
+    id_mantenimiento int(100) not null,
+    constraint mantenimiento_elemento_pasivo_elemento_activo_llave foreign key (id_elemento) references elemento_pasivo(id) on delete cascade,
+    constraint mantenimiento_elemento_pasivo_mantenimiento_llave foreign key (id_mantenimiento) references mantenimiento(id) on delete cascade
   );

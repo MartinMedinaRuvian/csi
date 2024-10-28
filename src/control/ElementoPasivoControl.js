@@ -1,4 +1,4 @@
-const DAO = require('../dao/ElementoActivoDAO');
+const DAO = require('../dao/ElementoPasivoDAO');
 const ValidacionPropiedadesObligatorias = require('../util/validar_propiedades');
 const StringUtil = require('../util/string_util')
 const FechaUti = require('../util/Fecha')
@@ -37,6 +37,23 @@ class ElementoControl {
     }
   }
 
+  async verInformacionPrincipalPorIdGabinete(id_gabinete) {
+    const dao = new DAO();
+    try {
+      const datos = await dao.verInfoPrincipalPorIdGabinete(id_gabinete)
+      console.log(datos)
+      return {
+        codigo: 200,
+        respuesta: datos
+      }
+    } catch (error) {
+      return {
+        codigo: 500,
+        respuesta: error
+      }
+    }
+  }  
+
   async verPorIdGabinete(id_gabinete) {
     const dao = new DAO();
     try {
@@ -71,7 +88,7 @@ class ElementoControl {
   }
 
   validarDatosObligatorios(dato) {
-    const datosObligatorios = ['descripcion', 'id_tipo_referencia', 'id_tipo_modelo', 'codigo', 'serial', 'id_tipo_marca', 'id_gabinete', 'id_usuario']
+    const datosObligatorios = ['descripcion', 'codigo', 'id_gabinete', 'id_usuario']
     const validarPropiedadesObligatorias = new ValidacionPropiedadesObligatorias()
     const validacionPropiedadObligatoria = validarPropiedadesObligatorias.validar(dato, datosObligatorios)
     return {
@@ -95,13 +112,8 @@ class ElementoControl {
       const stringUtil = new StringUtil()
       dato.descripcion = stringUtil.transformarTodoEnMayusculas(dato.descripcion)
       dato.codigo = stringUtil.transformarTodoEnMayusculas(dato.codigo)
-      dato.serial = stringUtil.transformarTodoEnMayusculas(dato.serial)
-      dato.os = stringUtil.transformarTodoEnMayusculas(dato.os)
-      dato.version_os = stringUtil.transformarTodoEnMayusculas(dato.version_os)
-      dato.mac = stringUtil.transformarTodoEnMayusculas(dato.mac)
-      dato.gateway = stringUtil.transformarTodoEnMayusculas(dato.gateway)
-      dato.ip_v4 = stringUtil.transformarTodoEnMayusculas(dato.ip_v4)
-      dato.ip_v6 = stringUtil.transformarTodoEnMayusculas(dato.ip_v6)
+      dato.categoria = stringUtil.transformarTodoEnMayusculas(dato.categoria)
+      dato.tipo_conector = stringUtil.transformarTodoEnMayusculas(dato.tipo_conector)
       dato.codigo_inventario = stringUtil.transformarTodoEnMayusculas(dato.codigo_inventario)
       
       dato.estado = 'A'
@@ -140,13 +152,8 @@ class ElementoControl {
       const stringUtil = new StringUtil()
       dato.descripcion = stringUtil.transformarTodoEnMayusculas(dato.descripcion)
       dato.codigo = stringUtil.transformarTodoEnMayusculas(dato.codigo)
-      dato.serial = stringUtil.transformarTodoEnMayusculas(dato.serial)
-      dato.os = stringUtil.transformarTodoEnMayusculas(dato.os)
-      dato.version_os = stringUtil.transformarTodoEnMayusculas(dato.version_os)
-      dato.mac = stringUtil.transformarTodoEnMayusculas(dato.mac)
-      dato.gateway = stringUtil.transformarTodoEnMayusculas(dato.gateway)
-      dato.ip_v4 = stringUtil.transformarTodoEnMayusculas(dato.ip_v4)
-      dato.ip_v6 = stringUtil.transformarTodoEnMayusculas(dato.ip_v6)
+      dato.categoria = stringUtil.transformarTodoEnMayusculas(dato.categoria)
+      dato.tipo_conector = stringUtil.transformarTodoEnMayusculas(dato.tipo_conector)
       dato.codigo_inventario = stringUtil.transformarTodoEnMayusculas(dato.codigo_inventario)
 
       dato.fecha_actualizacion = new FechaUti().fechaActual()
