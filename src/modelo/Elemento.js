@@ -1,12 +1,13 @@
 class Elemento {
 
   id
-  nombre
+  descripcion
   id_tipo_elemento
-  id_tipo_dispositivo
-  referencia
+  id_tipo_referencia
+  codigo
   serial
-  modelo
+  id_tipo_modelo
+  id_tipo_marca
   observacion
   os
   version_os
@@ -26,12 +27,13 @@ class Elemento {
   id_usuario
   
   constructor (elemento) {
-      this.nombre = elemento.nombre
       this.id_tipo_elemento = elemento.id_tipo_elemento
-      this.id_tipo_dispositivo = elemento.id_tipo_dispositivo
-      this.referencia = elemento.referencia
+      this.descripcion = elemento.descripcion
+      this.id_tipo_referencia = elemento.id_tipo_referencia
+      this.codigo = elemento.codigo
       this.serial = elemento.serial
-      this.modelo = elemento.modelo
+      this.id_tipo_modelo = elemento.id_tipo_modelo
+      this.id_tipo_marca = elemento.id_tipo_marca
       this.observacion = elemento.observacion
       this.os = elemento.os
       this.version_os = elemento.version_os

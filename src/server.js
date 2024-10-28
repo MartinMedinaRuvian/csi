@@ -43,6 +43,7 @@ const tipoGabineteEndpoint = require('./endpoints/TipoGabineteEndpoint')
 const elementoEndpoint = require('./endpoints/ElementoEndpoint')
 const tipoElementoEndpoint = require('./endpoints/TipoElementoEndpoint')
 const tipoDispositivoEndpoint = require('./endpoints/TipoDispositivoEndpoint')
+const tipoEndpoint = require('./endpoints/TipoEndpoint')
 
 /**
  * configuro las rutas del servidor
@@ -57,7 +58,7 @@ app.use('/gabinete', verificarToken, gabineteEndpoint)
 app.use('/tipo_gabinete', verificarToken, tipoGabineteEndpoint)
 app.use('/elemento', verificarToken, elementoEndpoint)
 app.use('/tipo_elemento', verificarToken, tipoElementoEndpoint)
-app.use('/tipo_dispositivo', verificarToken, tipoDispositivoEndpoint)
+app.use('/tipo', verificarToken, tipoEndpoint)
 
 
 module.exports = app;

@@ -117,38 +117,57 @@
   ('ACTIVO', '2024-10-04', 'A'),
   ('PASIVO', '2024-10-04', 'A');
 
-  create table if not exists tipo_dispositivo(
-    id int(2) not null auto_increment primary key,
-    descripcion char(30) not null unique,
+  create table if not exists tipo_modelo(
+    id int(50) not null auto_increment primary key,
+    descripcion char(15) not null unique,
     fecha_creacion date not null,
     fecha_actualizacion date,
     estado char(1) not null
   );
 
-  insert into tipo_dispositivo(descripcion, fecha_creacion, estado) 
-  values 
-  ('SWITCH', '2024-10-04', 'A'),
-  ('PANEL', '2024-10-04', 'A'),
-  ('OTRO', '2024-10-04', 'A');
+  create table if not exists tipo_referencia(
+    id int(50) not null auto_increment primary key,
+    descripcion char(15) not null unique,
+    fecha_creacion date not null,
+    fecha_actualizacion date,
+    estado char(1) not null
+  );
+
+  create table if not exists tipo_marca(
+    id int(50) not null auto_increment primary key,
+    descripcion char(15) not null unique,
+    fecha_creacion date not null,
+    fecha_actualizacion date,
+    estado char(1) not null
+  );
+
+-- Insertando en tipo_modelo
+insert into tipo_modelo (descripcion, fecha_creacion, estado) 
+values ('Catalyst 2960', '2024-10-25', 'A'),
+       ('ISR 4000', '2024-10-25', 'A'),
+       ('UniFi Switch', '2024-10-25', 'A'),
+       ('FortiGate 100F', '2024-10-25', 'A');
+
+-- Insertando en tipo_referencia
+insert into tipo_referencia (descripcion, fecha_creacion, estado) 
+values ('2960-X', '2024-10-25', 'A'),
+       ('ISR4451-X', '2024-10-25', 'A'),
+       ('US-24', '2024-10-25', 'A'),
+       ('100F', '2024-10-25', 'A');
+
+-- Insertando en tipo_marca
+insert into tipo_marca (descripcion, fecha_creacion, estado) 
+values ('Cisco', '2024-10-25', 'A'),
+       ('Ubiquiti', '2024-10-25', 'A'),
+       ('Fortinet', '2024-10-25', 'A'),
+       ('HP Aruba', '2024-10-25', 'A');
+
 
   create table if not exists elemento(
     id int(20) not null auto_increment primary key,
-    nombre char(200) not null,
-    id_tipo_elemento int(2) not null,
-    id_tipo_dispositivo int(2) not null,
-    referencia char(200),
-    serial char(100) not null,
-    modelo char(200),
+    descripcion char(200) not null,
+    codigo char(100) not null,
     observacion char(255),
-    os char(50),
-    version_os char(50),
-    mac char(30),
-    gateway char(30),
-    ip_v4 char(15),
-    ip_v6 char(40),
-    cantidad_puertos_por_defecto int,
-    puerto_logico_por_defecto int,
-    puerto_fisico_por_defecto int,
     codigo_inventario char(100),
     ruta_imagen char(255),
     fecha_creacion date not null,
@@ -158,6 +177,37 @@
     id_usuario int(100) not null,
     constraint elemento_gabinete_llave foreign key (id_gabinete) references gabinete(id) on delete cascade,
     constraint elemento_usuario_llave foreign key (id_usuario) references usuario(id) on delete cascade
+  );
+
+  create table if not exists elemento_activo(
+    id int(20) not null auto_increment primary key,
+    id_elemento int(2) not null,
+    id_tipo_referencia int(50) not null,
+    id_tipo_modelo int(50) not null,
+    id_tipo_marca int(50) not null,
+    serial char(100) not null,
+    os char(50),
+    version_os char(50),
+    mac char(30),
+    gateway char(30),
+    ip_v4 char(15),
+    ip_v6 char(40),
+    cantidad_puertos_por_defecto int,
+    puerto_logico_por_defecto int,
+    puerto_fisico_por_defecto int,
+    constraint elemento_activo_elemento_llave foreign key (id_elemento) references elemento(id) on delete cascade,
+    constraint elemento_activo_tipo_referencia_llave foreign key (id_tipo_referencia) references tipo_referencia(id) on delete cascade,
+    constraint elemento_activo_tipo_modelo_llave foreign key (id_tipo_modelo) references tipo_modelo(id) on delete cascade,
+    constraint elemento_activo_tipo_marca_llave foreign key (id_tipo_marca) references tipo_marca(id) on delete cascade
+  );
+
+  create table if not exists elemento_pasivo(
+    id int(20) not null auto_increment primary key,
+    id_elemento int(2) not null, 
+    categoria char(100) not null,
+    numero_puertos int,
+    tipo_conector char(50),
+    constraint elemento_pasivo_elemento_llave foreign key (id_elemento) references elemento(id) on delete cascade
   );
   
   create table if not exists proyecto_elemento(

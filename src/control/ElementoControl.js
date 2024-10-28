@@ -71,7 +71,7 @@ class ElementoControl {
   }
 
   validarDatosObligatorios(dato) {
-    const datosObligatorios = ['nombre', 'id_tipo_elemento', 'id_tipo_dispositivo', 'id_gabinete', 'id_usuario']
+    const datosObligatorios = ['descripcion', 'id_tipo_elemento', 'id_tipo_referencia', 'id_tipo_modelo', 'codigo', 'serial', 'id_tipo_marca', 'id_gabinete', 'id_usuario']
     const validarPropiedadesObligatorias = new ValidacionPropiedadesObligatorias()
     const validacionPropiedadObligatoria = validarPropiedadesObligatorias.validar(dato, datosObligatorios)
     return {
@@ -93,10 +93,9 @@ class ElementoControl {
       }
 
       const stringUtil = new StringUtil()
-      dato.nombre = stringUtil.transformarTodoEnMayusculas(dato.nombre)
-      dato.referencia = stringUtil.transformarTodoEnMayusculas(dato.referencia)
+      dato.descripcion = stringUtil.transformarTodoEnMayusculas(dato.descripcion)
+      dato.codigo = stringUtil.transformarTodoEnMayusculas(dato.codigo)
       dato.serial = stringUtil.transformarTodoEnMayusculas(dato.serial)
-      dato.modelo = stringUtil.transformarTodoEnMayusculas(dato.modelo)
       dato.os = stringUtil.transformarTodoEnMayusculas(dato.os)
       dato.version_os = stringUtil.transformarTodoEnMayusculas(dato.version_os)
       dato.mac = stringUtil.transformarTodoEnMayusculas(dato.mac)
@@ -107,7 +106,7 @@ class ElementoControl {
       
       dato.estado = 'A'
       dato.fecha_creacion = new FechaUti().fechaActual()
-      const yaExiste = await dao.yaExiste(dato.serial, dato.id_gabinete);
+      const yaExiste = await dao.yaExiste(dato.codigo, dato.id_gabinete);
       if (yaExiste) {
         return {
           codigo: 500,
@@ -139,10 +138,9 @@ class ElementoControl {
     try {
 
       const stringUtil = new StringUtil()
-      dato.nombre = stringUtil.transformarTodoEnMayusculas(dato.nombre)
-      dato.referencia = stringUtil.transformarTodoEnMayusculas(dato.referencia)
+      dato.descripcion = stringUtil.transformarTodoEnMayusculas(dato.descripcion)
+      dato.codigo = stringUtil.transformarTodoEnMayusculas(dato.codigo)
       dato.serial = stringUtil.transformarTodoEnMayusculas(dato.serial)
-      dato.modelo = stringUtil.transformarTodoEnMayusculas(dato.modelo)
       dato.os = stringUtil.transformarTodoEnMayusculas(dato.os)
       dato.version_os = stringUtil.transformarTodoEnMayusculas(dato.version_os)
       dato.mac = stringUtil.transformarTodoEnMayusculas(dato.mac)

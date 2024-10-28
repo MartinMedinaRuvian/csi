@@ -8,17 +8,17 @@ const idPropiedad = 'id'
 class ElementoDAO {
 
     async obtenerTodos() {
-        const datos = await conexion.query("SELECT * FROM " + nombreTabla + " WHERE estado='A'" + " ORDER BY " + idPropiedad + " DESC")
+        const datos = await conexion.query("SELECT * FROM " + nombreTabla + " WHERE estado='A'" + " ORDER BY codigo ASC")
         return datos
     }
 
     async obtenerFiltrado(condicion, buscar) {
-        const datos = await conexion.query('SELECT * FROM ' + nombreTabla + " WHERE " + condicion + " LIKE '%" + buscar + "%' AND estado='A'" + " ORDER BY " + idPropiedad + " DESC")
+        const datos = await conexion.query('SELECT * FROM ' + nombreTabla + " WHERE " + condicion + " LIKE '%" + buscar + "%' AND estado='A'" + " ORDER BY codigo ASC")
         return datos
     }
 
     async verPorIdGabinete(id_gabinete) {
-        const datos = await conexion.query('SELECT * FROM ' + nombreTabla + ' WHERE id_gabinete=?' + "AND estado='A'" + " ORDER BY id DESC", [id_gabinete])
+        const datos = await conexion.query('SELECT e.id, e.descripcion, e.codigo, e.serial, e.estado, e.id_tipo_elemento, e.id_tipo_modelo, e.id_tipo_marca, te.descripcion AS tipo_elemento, tr.descripcion AS tipo_referencia, tm.descripcion AS tipo_modelo, tmr.descripcion AS tipo_marca FROM ' + nombreTabla + ' e INNER JOIN tipo_elemento te ON te.id = e.id_tipo_elemento INNER JOIN tipo_referencia tr ON tr.id = e.id_tipo_referencia INNER JOIN tipo_modelo tm ON tm.id = e.id_tipo_modelo INNER JOIN tipo_marca tmr ON tmr.id = e.id_tipo_marca WHERE e.id_gabinete=?' + " AND e.estado='A'" + " ORDER BY e.codigo ASC", [id_gabinete])
         return datos
     }
 
