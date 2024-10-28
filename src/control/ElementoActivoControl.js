@@ -1,4 +1,4 @@
-const DAO = require('../dao/ElementoDAO');
+const DAO = require('../dao/ElementoActivoDAO');
 const ValidacionPropiedadesObligatorias = require('../util/validar_propiedades');
 const StringUtil = require('../util/string_util')
 const FechaUti = require('../util/Fecha')

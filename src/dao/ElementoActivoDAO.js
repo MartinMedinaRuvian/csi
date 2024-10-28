@@ -1,4 +1,4 @@
-const Elemento = require('../modelo/Elemento')
+const Elemento = require('../modelo/ElementoActivo')
 const conexion = require('../util/conexion_mysql')
 const GenerarQueryActualizarDB = require('../util/generar_query_actualizar_db')
 
