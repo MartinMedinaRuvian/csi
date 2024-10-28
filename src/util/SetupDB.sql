@@ -280,17 +280,17 @@ values ('Cisco', '2024-10-25', 'A'),
 
   create table if not exists elemento_activo_archivo(
     id int(100) not null auto_increment primary key,
-    id_elemento int(100) not null,
+    id_elemento_activo int(100) not null,
     id_archivo int(100) not null,
-    constraint elemento_activo_archivo_elemento_llave foreign key (id_elemento) references elemento_activo(id) on delete cascade,
+    constraint elemento_activo_archivo_elemento_llave foreign key (id_elemento_activo) references elemento_activo(id) on delete cascade,
     constraint elemento_activo_archivo_archivo_llave foreign key (id_archivo) references archivo(id) on delete cascade
   );
 
   create table if not exists elemento_pasivo_archivo(
     id int(100) not null auto_increment primary key,
-    id_elemento int(100) not null,
+    id_elemento_pasivo int(100) not null,
     id_archivo int(100) not null,
-    constraint elemento_pasivo_archivo_elemento_llave foreign key (id_elemento) references elemento_pasivo(id) on delete cascade,
+    constraint elemento_pasivo_archivo_elemento_llave foreign key (id_elemento_pasivo) references elemento_pasivo(id) on delete cascade,
     constraint elemento_pasivo_archivo_archivo_llave foreign key (id_archivo) references archivo(id) on delete cascade
   );
 

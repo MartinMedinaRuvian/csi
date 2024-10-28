@@ -1,3 +1,4 @@
+const ElementoPasivo = require('../modelo/ElementoPasivo')
 const Elemento = require('../modelo/ElementoPasivo')
 const conexion = require('../util/conexion_mysql')
 const GenerarQueryActualizarDB = require('../util/generar_query_actualizar_db')
@@ -28,7 +29,7 @@ class ElementoDAO {
     }
 
     async verInfo(id) {
-        const datos = await conexion.query('SELECT * FROM ' + nombreTabla + ' WHERE ' + idPropiedad + '=?', [id])
+        const datos = await conexion.query('SELECT e.id, e.descripcion, e.codigo, e.observacion, e.codigo_inventario, e.categoria, e.numero_puertos, e.tipo_conector, e.ruta_imagen, e.fecha_creacion, e.fecha_actualizacion, e.estado, e.id_gabinete, e.id_usuario FROM ' + nombreTabla + ' e WHERE e.id=?', [id])
         return datos[0]
     }
 
@@ -51,9 +52,10 @@ class ElementoDAO {
     
     async actualizar(dato) {
         console.log(dato, 'd')
-        const generarQueryActualizarDB = new GenerarQueryActualizarDB(dato, nombreTabla, idPropiedad, Elemento)
+        const generarQueryActualizarDB = new GenerarQueryActualizarDB(dato, nombreTabla, idPropiedad, ElementoPasivo)
         const consulta = await generarQueryActualizarDB.consultaGenerada()
         const valores = await generarQueryActualizarDB.valoresGenerados()
+        console.log(consulta, valores)
         try {
             const resultado = await conexion.query(consulta, valores);
             return resultado.affectedRows > 0;

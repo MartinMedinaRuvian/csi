@@ -17,6 +17,15 @@ rutas.get('/info/:id', async (req, res) => {
 });
 
 
+rutas.get('/info_principal/:id_gabinete', async (req, res) => {
+   const {id_gabinete} = req.params
+   console.log(id_gabinete, 'id_gabinete')
+   const ctr = new Control();
+   const control = await ctr.verPorIdGabinete(id_gabinete)
+   res.status(control.codigo).json(control.respuesta)
+});
+
+
 rutas.get('/:id_gabinete', async (req, res) => {
    const {id_gabinete} = req.params
    console.log(id_gabinete, 'id_gabinete')

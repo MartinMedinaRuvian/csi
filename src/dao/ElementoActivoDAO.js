@@ -28,7 +28,7 @@ class ElementoDAO {
     }
 
     async verInfo(id) {
-        const datos = await conexion.query('SELECT * FROM ' + nombreTabla + ' WHERE ' + idPropiedad + '=?', [id])
+        const datos = await conexion.query('SELECT e.id, e.descripcion, e.codigo, e.serial, e.observacion, e.codigo_inventario, e.estado, e.os, e.version_os, e.mac, e.gateway, e.ip_v4, e.ip_v6, e.cantidad_puertos_por_defecto, e.puerto_logico_por_defecto, e.puerto_fisico_por_defecto, e.ruta_imagen, e.fecha_creacion, e.fecha_actualizacion, e.id_gabinete, e.id_usuario, e.id_tipo_modelo, e.id_tipo_marca, e.id_tipo_referencia, tr.descripcion AS tipo_referencia, tm.descripcion AS tipo_modelo, tmr.descripcion AS tipo_marca FROM ' + nombreTabla + ' e INNER JOIN tipo_referencia tr ON tr.id = e.id_tipo_referencia INNER JOIN tipo_modelo tm ON tm.id = e.id_tipo_modelo INNER JOIN tipo_marca tmr ON tmr.id = e.id_tipo_marca WHERE e.id=?', [id])
         return datos[0]
     }
 
@@ -39,10 +39,61 @@ class ElementoDAO {
     }
 
     async guardar(dato) {
-        const datoGuardar = new Elemento(dato)
-        const guardar = await conexion.query('INSERT INTO ' + nombreTabla + ' SET ?', [datoGuardar])
-        return guardar.affectedRows > 0 ? guardar.insertId : -1
+        const {
+            descripcion,
+            codigo,
+            observacion,
+            codigo_inventario,
+            id_tipo_referencia,
+            id_tipo_modelo,
+            id_tipo_marca,
+            serial,
+            os,
+            version_os,
+            mac,
+            gateway,
+            ip_v4,
+            ip_v6,
+            cantidad_puertos_por_defecto,
+            puerto_logico_por_defecto,
+            puerto_fisico_por_defecto,
+            ruta_imagen,
+            fecha_creacion,
+            fecha_actualizacion,
+            estado,
+            id_gabinete,
+            id_usuario
+        } = dato;
+
+        const datoGuardar = new Elemento(
+            descripcion,
+            codigo,
+            observacion,
+            codigo_inventario,
+            id_tipo_referencia,
+            id_tipo_modelo,
+            id_tipo_marca,
+            serial,
+            os,
+            version_os,
+            mac,
+            gateway,
+            ip_v4,
+            ip_v6,
+            cantidad_puertos_por_defecto,
+            puerto_logico_por_defecto,
+            puerto_fisico_por_defecto,
+            ruta_imagen,
+            fecha_creacion,
+            fecha_actualizacion,
+            estado,
+            id_gabinete,
+            id_usuario
+        );
+        const guardar = await conexion.query('INSERT INTO ' + nombreTabla + ' SET ?', [datoGuardar]);
+        return guardar.affectedRows > 0 ? guardar.insertId : -1;
     }
+    
 
     async cambiarEstado(estado, id) {
         const cambiar = await conexion.query('UPDATE ' + nombreTabla + ' SET estado=? WHERE ' + idPropiedad + '=?', [estado, id])
