@@ -158,6 +158,19 @@ class ElementoControl {
 
       dato.fecha_actualizacion = new FechaUti().fechaActual()
       console.log(dato)
+
+      const datoExistente = await dao.verInfoExistente(dato.id)
+      let verificarExistencia = datoExistente.codigo !== dato.codigo
+      if (verificarExistencia) {
+        const yaExiste = await dao.yaExiste(dato.codigo, dato.id_gabinete)
+        if (yaExiste) {
+          return {
+            codigo: 500,
+            respuesta: 'Ya existe'
+          }
+        }
+      }
+
       if (await dao.actualizar(dato)) {
         return {
           codigo: 200,

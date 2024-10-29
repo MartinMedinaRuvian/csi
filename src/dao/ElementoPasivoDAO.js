@@ -33,6 +33,11 @@ class ElementoDAO {
         return datos[0]
     }
 
+    async verInfoExistente(id) {
+        const datos = await conexion.query('SELECT codigo FROM ' + nombreTabla + ' WHERE id=?', [id])
+        return datos[0]
+    }
+
     async yaExiste(codigo, id_gabinete) {
         console.log(codigo, id_gabinete, 'ya existe')
         const yaExiste = await conexion.query('SELECT codigo FROM ' + nombreTabla + ' WHERE codigo=? AND id_gabinete=?', [codigo, id_gabinete])
@@ -40,10 +45,40 @@ class ElementoDAO {
     }
 
     async guardar(dato) {
-        const datoGuardar = new Elemento(dato)
-        const guardar = await conexion.query('INSERT INTO ' + nombreTabla + ' SET ?', [datoGuardar])
-        return guardar.affectedRows > 0 ? guardar.insertId : -1
-    }
+        const {
+          descripcion,
+          codigo,
+          observacion,
+          codigo_inventario,
+          categoria,
+          numero_puertos,
+          tipo_conector,
+          ruta_imagen,
+          fecha_creacion,
+          fecha_actualizacion,
+          estado,
+          id_gabinete,
+          id_usuario
+        } = dato;
+        const datoGuardar = new Elemento(
+          descripcion,
+          codigo,
+          observacion,
+          codigo_inventario,
+          categoria,
+          numero_puertos,
+          tipo_conector,
+          ruta_imagen,
+          fecha_creacion,
+          fecha_actualizacion,
+          estado,
+          id_gabinete,
+          id_usuario
+        );
+        const guardar = await conexion.query('INSERT INTO ' + nombreTabla + ' SET ?', [datoGuardar]);
+        return guardar.affectedRows > 0 ? guardar.insertId : -1;
+      }
+      
 
     async cambiarEstado(estado, id) {
         const cambiar = await conexion.query('UPDATE ' + nombreTabla + ' SET estado=? WHERE ' + idPropiedad + '=?', [estado, id])
@@ -51,7 +86,6 @@ class ElementoDAO {
     }    
     
     async actualizar(dato) {
-        console.log(dato, 'd')
         const generarQueryActualizarDB = new GenerarQueryActualizarDB(dato, nombreTabla, idPropiedad, ElementoPasivo)
         const consulta = await generarQueryActualizarDB.consultaGenerada()
         const valores = await generarQueryActualizarDB.valoresGenerados()
