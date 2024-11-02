@@ -1,5 +1,6 @@
 const DAO = require('../dao/ProyectoDAO');
-const FechaUti = require('../util/Fecha')
+const FechaUti = require('../util/Fecha');
+const StringUtil = require('../util/string_util');
 const ValidacionPropiedadesObligatorias = require('../util/validar_propiedades');
 
 class ProyectoControl {
@@ -40,6 +41,9 @@ class ProyectoControl {
         }
       }
 
+      const stringUtil = new StringUtil()
+      datos.codigo = stringUtil.transformarTodoEnMayusculas(datos.codigo)
+      datos.nombre_empresa = stringUtil.transformarTodoEnMayusculas(datos.nombre_empresa)
       datos.fecha_creacion = new FechaUti().fechaActual()
       datos.estado = 'A'
       const yaExisteProyecto = await dao.yaExisteProyecto(datos.codigo);
