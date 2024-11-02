@@ -92,7 +92,7 @@
 
   create table if not exists proyecto(
     id int(100) not null auto_increment primary key,
-    codigo char(100) not null unique,
+    codigo char(100) not null,
     certificacion char(200),
     nombre_empresa char(200) not null,
     nit_empresa char(50) not null,
@@ -101,9 +101,7 @@
     fecha_actualizacion date,
     estado char(1) not null
   );
-
-  insert into proyecto(codigo, certificacion, nombre_empresa, nit_empresa, fecha, fecha_creacion, estado) values ('000-PRUEBA', 'CERT-PRUEBA', 'EMPRESA PRUEBA', '00000000', '2022-09-28', '2024-09-28', 'A');
-
+  
   create table if not exists tipo_elemento(
     id int(2) not null auto_increment primary key,
     descripcion char(15) not null unique,
@@ -213,20 +211,20 @@ values ('Cisco', '2024-10-25', 'A'),
     constraint elemento_pasivo_usuario_llave foreign key (id_usuario) references usuario(id) on delete cascade
   );
   
-  create table if not exists proyecto_elemento_activo(
+  create table if not exists elemento_activo_proyecto(
     id int(100) not null auto_increment primary key,
     id_proyecto int(100) not null,
-    id_elemento int(100) not null,
-    constraint proyecto_elemento_activo_proyecto_llave foreign key (id_proyecto) references proyecto(id) on delete cascade,
-    constraint proyecto_elemento_activo_elemento_llave foreign key (id_elemento) references elemento_activo(id) on delete cascade
+    id_elemento_activo int(100) not null,
+    constraint elemento_activo_proyecto_proyecto_llave foreign key (id_proyecto) references proyecto(id) on delete cascade,
+    constraint elemento_activo_proyecto_elemento_activo_llave foreign key (id_elemento_activo) references elemento_activo(id) on delete cascade
   );
 
-  create table if not exists proyecto_elemento_activo(
+  create table if not exists elemento_pasivo_proyecto(
     id int(100) not null auto_increment primary key,
     id_proyecto int(100) not null,
-    id_elemento int(100) not null,
-    constraint proyecto_elemento_pasivo_proyecto_llave foreign key (id_proyecto) references proyecto(id) on delete cascade,
-    constraint proyecto_elemento_pasivo_elemento_llave foreign key (id_elemento) references elemento_pasivo(id) on delete cascade
+    id_elemento_pasivo int(100) not null,
+    constraint elemento_pasivo_proyecto_proyecto_llave foreign key (id_proyecto) references proyecto(id) on delete cascade,
+    constraint elemento_pasivo_proyecto_elemento_pasivo_llave foreign key (id_elemento_pasivo) references elemento_pasivo(id) on delete cascade
   );
 
   create table if not exists proyecto_centro_cableado(
