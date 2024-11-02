@@ -101,7 +101,7 @@
     fecha_actualizacion date,
     estado char(1) not null
   );
-  
+
   create table if not exists tipo_elemento(
     id int(2) not null auto_increment primary key,
     descripcion char(15) not null unique,
@@ -227,12 +227,12 @@ values ('Cisco', '2024-10-25', 'A'),
     constraint elemento_pasivo_proyecto_elemento_pasivo_llave foreign key (id_elemento_pasivo) references elemento_pasivo(id) on delete cascade
   );
 
-  create table if not exists proyecto_centro_cableado(
+  create table if not exists centro_cableado_proyecto(
     id int(100) not null auto_increment primary key,
     id_proyecto int(100) not null,
     id_centro_cableado int(100) not null,
-    constraint proyecto_centro_cableado_proyecto_llave foreign key (id_proyecto) references proyecto(id) on delete cascade,
-    constraint proyecto_centro_cableado_centro_cableado_llave foreign key (id_centro_cableado) references centro_cableado(id) on delete cascade
+    constraint centro_cableado_proyecto_proyecto_llave foreign key (id_proyecto) references proyecto(id) on delete cascade,
+    constraint centro_cableado_proyecto_centro_cableado_llave foreign key (id_centro_cableado) references centro_cableado(id) on delete cascade
   );
 
   create table if not exists archivo(
