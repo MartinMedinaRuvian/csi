@@ -302,16 +302,16 @@ values ('Cisco', '2024-10-25', 'A'),
 
   create table if not exists mantenimiento_elemento_activo(
     id int(100) not null auto_increment primary key,
-    id_elemento int(100) not null,
+    id_elemento_activo int(100) not null,
     id_mantenimiento int(100) not null,
-    constraint mantenimiento_elemento_activo_elemento_activo_llave foreign key (id_elemento) references elemento_activo(id) on delete cascade,
+    constraint mantenimiento_elemento_activo_elemento_activo_llave foreign key (id_elemento_activo) references elemento_activo(id) on delete cascade,
     constraint mantenimiento_elemento_activo_mantenimiento_llave foreign key (id_mantenimiento) references mantenimiento(id) on delete cascade
   );
 
   create table if not exists mantenimiento_elemento_pasivo(
     id int(100) not null auto_increment primary key,
-    id_elemento int(100) not null,
+    id_elemento_pasivo int(100) not null,
     id_mantenimiento int(100) not null,
-    constraint mantenimiento_elemento_pasivo_elemento_activo_llave foreign key (id_elemento) references elemento_pasivo(id) on delete cascade,
+    constraint mantenimiento_elemento_pasivo_elemento_pasivo_llave foreign key (id_elemento_pasivo) references elemento_pasivo(id) on delete cascade,
     constraint mantenimiento_elemento_pasivo_mantenimiento_llave foreign key (id_mantenimiento) references mantenimiento(id) on delete cascade
   );

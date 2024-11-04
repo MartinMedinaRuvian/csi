@@ -22,6 +22,22 @@ class ProyectoControl {
   }
 
 
+  async verInfo(id) {
+    const dao = new DAO('');
+    try {
+      const datos = await dao.verInfo(id);
+      return {
+        codigo: 200,
+        respuesta: datos
+      }
+    } catch (error) {
+      return {
+        codigo: 500,
+        respuesta: error
+      }
+    }
+  }
+
   async guardar(datos, idRegistroTabla) {
     try {
       const dao = new DAO(this.nombreTabla)

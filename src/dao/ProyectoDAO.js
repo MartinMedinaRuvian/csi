@@ -30,7 +30,7 @@ class ProyectoDAO {
   async verTodosProyectosPorIdRegistro(id) {
     const nombreTablaConsultar = this.nombreTabla + '_proyecto'
     const columnaTablaConsultar = 'id_' + this.nombreTabla
-    const datos = await conexion.query('SELECT p.codigo, p.certificacion, p.nombre_empresa, p.nit_empresa, p.fecha, p.estado FROM ' + nombreTablaConsultar + ' INNER JOIN proyecto p ON p.id = id_proyecto WHERE ' + columnaTablaConsultar + '=?', [id])
+    const datos = await conexion.query('SELECT p.id, p.codigo, p.certificacion, p.nombre_empresa, p.nit_empresa, p.fecha, p.estado FROM ' + nombreTablaConsultar + ' INNER JOIN proyecto p ON p.id = id_proyecto WHERE ' + columnaTablaConsultar + '=?', [id])
     return datos
   }
 
@@ -56,8 +56,9 @@ class ProyectoDAO {
     return datos[0].id
   }
 
-  async verInfoProyecto(id_proyecto) {
-    const datos = await conexion.query('SELECT codigo, certificacion, nombre_empresa, nit_empresa, fecha, estado FROM ' + nombreTablaGeneral + ' WHERE id=?', [id_proyecto])
+  async verInfo(id_proyecto) {
+    console.log(id_proyecto, 'ver infoooo')
+    const datos = await conexion.query('SELECT id, codigo, certificacion, nombre_empresa, nit_empresa, fecha, estado FROM ' + nombreTablaGeneral + ' WHERE id=?', [id_proyecto])
     return datos[0]
   }
 
