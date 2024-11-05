@@ -98,6 +98,27 @@ class MantenimientoControl {
     return await new DAO(this.nombreTabla).verInfoMantenimiento(idMantenimiento)
   }
 
+  async actualizar(dato) {
+    const dao = new DAO('')
+    try {
+      const stringUtil = new StringUtil()
+      dato.codigo = stringUtil.transformarTodoEnMayusculas(dato.codigo)
+      dato.realizado_por = stringUtil.transformarTodoEnMayusculas(dato.realizado_por)
+      dato.fecha_actualizacion = new FechaUti().fechaActual()
+      if (await dao.actualizar(dato)) {
+        return {
+          codigo: 200,
+          respuesta: 'Correcto'
+        }
+      }
+    } catch (error) {
+      return {
+        codigo: 500,
+        respuesta: error
+      }
+    }
+  }
+
   async eliminar(idMantenimiento, idRegistroTabla) {
     try {
       console.log(idMantenimiento, idRegistroTabla)

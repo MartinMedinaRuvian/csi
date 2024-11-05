@@ -1,7 +1,9 @@
 const Mantenimiento = require('../modelo/Mantenimiento')
 const conexion = require('../util/conexion_mysql')
+const GenerarQueryActualizarDB = require('../util/generar_query_actualizar_db')
 
 let nombreTablaGeneral = 'mantenimiento'
+const idPropiedad = 'id'
 
 class MantenimientoDAO {
 
@@ -61,6 +63,22 @@ class MantenimientoDAO {
     console.log(id_mantenimiento, 'ver infoooo')
     const datos = await conexion.query('SELECT id, codigo, observacion, realizado_por, fecha, estado FROM ' + nombreTablaGeneral + ' WHERE id=?', [id_mantenimiento])
     return datos[0]
+  }
+
+  async actualizar(dato) {
+    console.log(dato, 'd')
+    const generarQueryActualizarDB = new GenerarQueryActualizarDB(dato, nombreTablaGeneral, idPropiedad, Mantenimiento)
+    const consulta = await generarQueryActualizarDB.consultaGenerada()
+    const valores = await generarQueryActualizarDB.valoresGenerados()
+    console.log(consulta)
+    console.log(valores)
+    try {
+      const resultado = await conexion.query(consulta, valores);
+      return resultado.affectedRows > 0;
+    } catch (error) {
+      console.error('Error al actualizar:', error);
+    }
+    return false
   }
 
   async eliminarMantenimiento(id_mantenimiento) {
