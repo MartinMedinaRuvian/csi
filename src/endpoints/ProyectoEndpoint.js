@@ -26,15 +26,23 @@ rutas.post('/:nombre_tabla/:id_registro_tabla', async (req, res) => {
   res.status(control.codigo).json(control.respuesta)
 });
 
+rutas.put('/', async (req, res) => {
+  const ctr = new ProyectoControl('')
+  const actualizado = await ctr.actualizar(req.body)
+  if (actualizado){
+     res.status(200).json({respuesta: 'Actualizado correctamente'})
+  } else {
+     res.status(500).json({respuesta: 'Error al actualizar'})
+  }
+})
+
 rutas.delete('/:nombre_tabla/:id_registro_tabla/:id_proyecto', async (req, res) => {
   const { nombre_tabla, id_proyecto, id_registro_tabla } = req.params;
   const proyectoControl = new ProyectoControl(nombre_tabla)
   const proyectoEliminar = await proyectoControl.verInfoProyecto(id_proyecto)
   if (proyectoEliminar != null && proyectoEliminar != undefined){
       if (proyectoControl.eliminar(id_proyecto, id_registro_tabla)){
-        if (controlProyectos.eliminarProyecto(proyectoEliminar.ruta)){
-          res.status(200).json({ mensaje: 'Proyecto eliminado correctamente' });
-        }
+        res.status(200).json({ mensaje: 'Proyecto eliminado correctamente' });
       }   
   } else {
     res.status(400).json({ mensaje: 'Ocurrió un error al eliminar el proyecto' });

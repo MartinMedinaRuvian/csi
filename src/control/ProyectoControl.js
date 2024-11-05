@@ -90,12 +90,30 @@ class ProyectoControl {
     }
   }
 
+  async actualizar(dato) {
+    const dao = new DAO('')
+    try {
+      dato.fecha_actualizacion = new FechaUti().fechaActual()
+      if (await dao.actualizar(dato)) {
+        return {
+          codigo: 200,
+          respuesta: 'Correcto'
+        }
+      }
+    } catch (error) {
+      return {
+        codigo: 500,
+        respuesta: error
+      }
+    }
+  }
+
   async verTodosProyectosRegistro(id) {
     return await new DAO(this.nombreTabla).verTodosProyectosPorIdRegistro(id)
   }
 
   async verInfoProyecto(idProyecto) {
-    return await new DAO(this.nombreTabla).verInfoProyecto(idProyecto)
+    return await new DAO(this.nombreTabla).verInfo(idProyecto)
   }
 
   async eliminar(idProyecto, idRegistroTabla) {

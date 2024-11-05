@@ -1,5 +1,6 @@
 class Proyecto {
 
+  id
   codigo
   certificacion
   nombre_empresa
