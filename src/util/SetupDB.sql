@@ -245,11 +245,21 @@ values ('Cisco', '2024-10-25', 'A'),
 
   create table if not exists mantenimiento(
     id int(100) not null auto_increment primary key,
+    codigo char(100) not null,
     observacion char(200) not null,
     realizado_por char(200) not null,
     fecha date not null,
     fecha_creacion date not null,
-    fecha_actualizacion date
+    fecha_actualizacion date,
+    estado char(1) not null
+  );
+
+  create table if not exists mantenimiento_archivo(
+    id int(100) not null auto_increment primary key,
+    id_mantenimiento int(100) not null,
+    id_archivo int(100) not null,
+    constraint mantenimiento_archivo_mantenimiento_llave foreign key (id_mantenimiento) references mantenimiento(id) on delete cascade,
+    constraint mantenimiento_archivo_archivo_llave foreign key (id_archivo) references archivo(id) on delete cascade
   );
 
   create table if not exists edificio_archivo(
@@ -300,18 +310,18 @@ values ('Cisco', '2024-10-25', 'A'),
     constraint proyecto_archivo_archivo_llave foreign key (id_archivo) references archivo(id) on delete cascade
   );
 
-  create table if not exists mantenimiento_elemento_activo(
+  create table if not exists elemento_activo_mantenimiento(
     id int(100) not null auto_increment primary key,
     id_elemento_activo int(100) not null,
     id_mantenimiento int(100) not null,
-    constraint mantenimiento_elemento_activo_elemento_activo_llave foreign key (id_elemento_activo) references elemento_activo(id) on delete cascade,
-    constraint mantenimiento_elemento_activo_mantenimiento_llave foreign key (id_mantenimiento) references mantenimiento(id) on delete cascade
+    constraint elemento_activo_mantenimiento_elemento_activo_llave foreign key (id_elemento_activo) references elemento_activo(id) on delete cascade,
+    constraint elemento_activo_mantenimiento_mantenimiento_llave foreign key (id_mantenimiento) references mantenimiento(id) on delete cascade
   );
 
-  create table if not exists mantenimiento_elemento_pasivo(
+  create table if not exists elemento_pasivo_mantenimiento(
     id int(100) not null auto_increment primary key,
     id_elemento_pasivo int(100) not null,
     id_mantenimiento int(100) not null,
-    constraint mantenimiento_elemento_pasivo_elemento_pasivo_llave foreign key (id_elemento_pasivo) references elemento_pasivo(id) on delete cascade,
-    constraint mantenimiento_elemento_pasivo_mantenimiento_llave foreign key (id_mantenimiento) references mantenimiento(id) on delete cascade
+    constraint elemento_pasivo_mantenimiento_elemento_pasivo_llave foreign key (id_elemento_pasivo) references elemento_pasivo(id) on delete cascade,
+    constraint elemento_pasivo_mantenimiento_mantenimiento_llave foreign key (id_mantenimiento) references mantenimiento(id) on delete cascade
   );

@@ -45,6 +45,7 @@ const elementoPasivoEndpoint = require('./endpoints/ElementoPasivoEndpoint')
 const tipoElementoEndpoint = require('./endpoints/TipoElementoEndpoint')
 const tipoEndpoint = require('./endpoints/TipoEndpoint')
 const proyectoEndpoint = require('./endpoints/ProyectoEndpoint')
+const mantenimientoEndpoint = require('./endpoints/MantenimientoEndpoint')
 
 /**
  * configuro las rutas del servidor
@@ -62,6 +63,7 @@ app.use('/elemento_pasivo', verificarToken, elementoPasivoEndpoint)
 app.use('/tipo_elemento', verificarToken, tipoElementoEndpoint)
 app.use('/tipo', verificarToken, tipoEndpoint)
 app.use('/proyecto', verificarToken, proyectoEndpoint)
+app.use('/mantenimiento', verificarToken, mantenimientoEndpoint)
 
 
 module.exports = app;
