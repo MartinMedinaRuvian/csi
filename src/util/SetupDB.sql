@@ -123,6 +123,22 @@
     estado char(1) not null
   );
 
+  create table if not exists tipo_dispositivo_activo(
+    id int(50) not null auto_increment primary key,
+    descripcion char(15) not null unique,
+    fecha_creacion date not null,
+    fecha_actualizacion date,
+    estado char(1) not null
+  );
+
+  create table if not exists tipo_dispositivo_pasivo(
+    id int(50) not null auto_increment primary key,
+    descripcion char(15) not null unique,
+    fecha_creacion date not null,
+    fecha_actualizacion date,
+    estado char(1) not null
+  );
+
   create table if not exists tipo_referencia(
     id int(50) not null auto_increment primary key,
     descripcion char(15) not null unique,
@@ -146,12 +162,22 @@ values ('Catalyst 2960', '2024-10-25', 'A'),
        ('UniFi Switch', '2024-10-25', 'A'),
        ('FortiGate 100F', '2024-10-25', 'A');
 
+-- Insertando en tipo_dispositivo_activo
+insert into tipo_dispositivo_activo (descripcion, fecha_creacion, estado) 
+values ('SWITCH', '2024-10-25', 'A'),
+       ('ROUTER', '2024-10-25', 'A'); 
+
+-- Insertando en tipo_dispositivo_pasivo
+insert into tipo_dispositivo_pasivo (descripcion, fecha_creacion, estado) 
+values ('PANEL', '2024-10-25', 'A'),
+       ('UPS', '2024-10-25', 'A');           
+
 -- Insertando en tipo_referencia
 insert into tipo_referencia (descripcion, fecha_creacion, estado) 
 values ('2960-X', '2024-10-25', 'A'),
        ('ISR4451-X', '2024-10-25', 'A'),
        ('US-24', '2024-10-25', 'A'),
-       ('100F', '2024-10-25', 'A');
+       ('100F', '2024-10-25', 'A');    
 
 -- Insertando en tipo_marca
 insert into tipo_marca (descripcion, fecha_creacion, estado) 
@@ -162,7 +188,7 @@ values ('Cisco', '2024-10-25', 'A'),
 
   create table if not exists elemento_activo(
     id int(20) not null auto_increment primary key,
-    descripcion char(200) not null,
+    id_tipo_dispositivo_activo int(50) not null,
     codigo char(100) not null,
     observacion char(255),
     codigo_inventario char(100),
@@ -187,6 +213,7 @@ values ('Cisco', '2024-10-25', 'A'),
     id_usuario int(100) not null,
     constraint elemento_activo_gabinete_llave foreign key (id_gabinete) references gabinete(id) on delete cascade,
     constraint elemento_activo_usuario_llave foreign key (id_usuario) references usuario(id) on delete cascade,
+    constraint elemento_activo_tipo_dispositivo_activo_llave foreign key (id_tipo_dispositivo_activo) references tipo_dispositivo_activo(id) on delete cascade,
     constraint elemento_activo_tipo_referencia_llave foreign key (id_tipo_referencia) references tipo_referencia(id) on delete cascade,
     constraint elemento_activo_tipo_modelo_llave foreign key (id_tipo_modelo) references tipo_modelo(id) on delete cascade,
     constraint elemento_activo_tipo_marca_llave foreign key (id_tipo_marca) references tipo_marca(id) on delete cascade
@@ -194,7 +221,7 @@ values ('Cisco', '2024-10-25', 'A'),
 
   create table if not exists elemento_pasivo(
     id int(20) not null auto_increment primary key,
-    descripcion char(200) not null,
+    id_tipo_dispositivo_pasivo int(50) not null,
     codigo char(100) not null,
     observacion char(255),
     codigo_inventario char(100),
@@ -207,6 +234,7 @@ values ('Cisco', '2024-10-25', 'A'),
     estado char(1) not null,
     id_gabinete int(100) not null,
     id_usuario int(100) not null,
+    constraint elemento_pasivo_tipo_dispositivo_pasivo_llave foreign key (id_tipo_dispositivo_pasivo) references tipo_dispositivo_pasivo(id) on delete cascade,
     constraint elemento_pasivo_gabinete_llave foreign key (id_gabinete) references gabinete(id) on delete cascade,
     constraint elemento_pasivo_usuario_llave foreign key (id_usuario) references usuario(id) on delete cascade
   );

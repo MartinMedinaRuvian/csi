@@ -18,17 +18,17 @@ class ElementoDAO {
     }
 
     async verInfoPrincipalPorIdGabinete(id_gabinete) {
-        const datos = await conexion.query('SELECT e.id, e.descripcion, e.codigo, e.serial, e.estado, e.id_tipo_modelo, e.id_tipo_marca, tr.descripcion AS tipo_referencia, tm.descripcion AS tipo_modelo, tmr.descripcion AS tipo_marca FROM ' + nombreTabla + ' e INNER JOIN tipo_referencia tr ON tr.id = e.id_tipo_referencia INNER JOIN tipo_modelo tm ON tm.id = e.id_tipo_modelo INNER JOIN tipo_marca tmr ON tmr.id = e.id_tipo_marca WHERE e.id_gabinete=?' + " AND e.estado='A'" + " ORDER BY e.codigo ASC", [id_gabinete])
+        const datos = await conexion.query('SELECT e.id, e.codigo, e.serial, e.estado, e.id_tipo_modelo, e.id_tipo_marca, e.id_tipo_dispositivo_activo, td.descripcion AS tipo_dispositivo, tr.descripcion AS tipo_referencia, tm.descripcion AS tipo_modelo, tmr.descripcion AS tipo_marca FROM ' + nombreTabla + ' e INNER JOIN tipo_dispositivo_activo td ON td.id = e.id_tipo_dispositivo_activo INNER JOIN tipo_referencia tr ON tr.id = e.id_tipo_referencia INNER JOIN tipo_modelo tm ON tm.id = e.id_tipo_modelo INNER JOIN tipo_marca tmr ON tmr.id = e.id_tipo_marca WHERE e.id_gabinete=?' + " AND e.estado='A'" + " ORDER BY e.codigo ASC", [id_gabinete])
         return datos
     }
 
     async verPorIdGabinete(id_gabinete) {
-        const datos = await conexion.query('SELECT e.id, e.descripcion, e.codigo, e.serial, e.observacion, e.codigo_inventario, e.estado, e.os, e.version_os, e.mac, e.gateway, e.ip_v4, e.ip_v6, e.cantidad_puertos_por_defecto, e.puerto_logico_por_defecto, e.puerto_fisico_por_defecto, e.ruta_imagen, e.fecha_creacion, e.fecha_actualizacion, e.id_gabinete, e.id_usuario, e.id_tipo_modelo, e.id_tipo_marca, tr.descripcion AS tipo_referencia, tm.descripcion AS tipo_modelo, tmr.descripcion AS tipo_marca FROM ' + nombreTabla + ' e INNER JOIN tipo_referencia tr ON tr.id = e.id_tipo_referencia INNER JOIN tipo_modelo tm ON tm.id = e.id_tipo_modelo INNER JOIN tipo_marca tmr ON tmr.id = e.id_tipo_marca WHERE e.id_gabinete=?' + " AND e.estado='A'" + " ORDER BY e.codigo ASC", [id_gabinete])
+        const datos = await conexion.query('SELECT e.id, e.codigo, e.serial, e.observacion, e.codigo_inventario, e.estado, e.os, e.version_os, e.mac, e.gateway, e.ip_v4, e.ip_v6, e.cantidad_puertos_por_defecto, e.puerto_logico_por_defecto, e.puerto_fisico_por_defecto, e.ruta_imagen, e.fecha_creacion, e.fecha_actualizacion, e.id_gabinete, e.id_usuario, e.id_tipo_modelo, e.id_tipo_marca, e.id_tipo_dispositivo_activo, td.descripcion AS tipo_dispositivo, tr.descripcion AS tipo_referencia, tm.descripcion AS tipo_modelo, tmr.descripcion AS tipo_marca FROM ' + nombreTabla + ' e INNER JOIN tipo_dispositivo_activo td ON td.id = e.id_tipo_dispositivo_activo INNER JOIN tipo_referencia tr ON tr.id = e.id_tipo_referencia INNER JOIN tipo_modelo tm ON tm.id = e.id_tipo_modelo INNER JOIN tipo_marca tmr ON tmr.id = e.id_tipo_marca WHERE e.id_gabinete=?' + " AND e.estado='A'" + " ORDER BY e.codigo ASC", [id_gabinete])
         return datos
     }
 
     async verInfo(id) {
-        const datos = await conexion.query('SELECT e.id, e.descripcion, e.codigo, e.serial, e.observacion, e.codigo_inventario, e.estado, e.os, e.version_os, e.mac, e.gateway, e.ip_v4, e.ip_v6, e.cantidad_puertos_por_defecto, e.puerto_logico_por_defecto, e.puerto_fisico_por_defecto, e.ruta_imagen, e.fecha_creacion, e.fecha_actualizacion, e.id_gabinete, e.id_usuario, e.id_tipo_modelo, e.id_tipo_marca, e.id_tipo_referencia, tr.descripcion AS tipo_referencia, tm.descripcion AS tipo_modelo, tmr.descripcion AS tipo_marca FROM ' + nombreTabla + ' e INNER JOIN tipo_referencia tr ON tr.id = e.id_tipo_referencia INNER JOIN tipo_modelo tm ON tm.id = e.id_tipo_modelo INNER JOIN tipo_marca tmr ON tmr.id = e.id_tipo_marca WHERE e.id=?', [id])
+        const datos = await conexion.query('SELECT e.id, e.codigo, e.serial, e.observacion, e.codigo_inventario, e.estado, e.os, e.version_os, e.mac, e.gateway, e.ip_v4, e.ip_v6, e.cantidad_puertos_por_defecto, e.puerto_logico_por_defecto, e.puerto_fisico_por_defecto, e.ruta_imagen, e.fecha_creacion, e.fecha_actualizacion, e.id_gabinete, e.id_usuario, e.id_tipo_modelo, e.id_tipo_marca, e.id_tipo_referencia, e.id_tipo_dispositivo_activo, td.descripcion AS tipo_dispositivo, tr.descripcion AS tipo_referencia, tm.descripcion AS tipo_modelo, tmr.descripcion AS tipo_marca FROM ' + nombreTabla + ' e INNER JOIN tipo_dispositivo_activo td ON td.id = e.id_tipo_dispositivo_activo INNER JOIN tipo_referencia tr ON tr.id = e.id_tipo_referencia INNER JOIN tipo_modelo tm ON tm.id = e.id_tipo_modelo INNER JOIN tipo_marca tmr ON tmr.id = e.id_tipo_marca WHERE e.id=?', [id])
         return datos[0]
     }
 
@@ -40,7 +40,7 @@ class ElementoDAO {
 
     async guardar(dato) {
         const {
-            descripcion,
+            id_tipo_dispositivo_activo,
             codigo,
             observacion,
             codigo_inventario,
@@ -66,7 +66,7 @@ class ElementoDAO {
         } = dato;
 
         const datoGuardar = new Elemento(
-            descripcion,
+            id_tipo_dispositivo_activo,
             codigo,
             observacion,
             codigo_inventario,

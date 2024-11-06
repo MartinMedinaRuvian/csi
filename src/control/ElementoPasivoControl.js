@@ -88,7 +88,7 @@ class ElementoControl {
   }
 
   validarDatosObligatorios(dato) {
-    const datosObligatorios = ['descripcion', 'codigo', 'id_gabinete', 'id_usuario']
+    const datosObligatorios = ['id_tipo_dispositivo_pasivo', 'codigo', 'id_gabinete', 'id_usuario']
     const validarPropiedadesObligatorias = new ValidacionPropiedadesObligatorias()
     const validacionPropiedadObligatoria = validarPropiedadesObligatorias.validar(dato, datosObligatorios)
     return {
@@ -110,7 +110,6 @@ class ElementoControl {
       }
 
       const stringUtil = new StringUtil()
-      dato.descripcion = stringUtil.transformarTodoEnMayusculas(dato.descripcion)
       dato.codigo = stringUtil.transformarTodoEnMayusculas(dato.codigo)
       dato.categoria = stringUtil.transformarTodoEnMayusculas(dato.categoria)
       dato.tipo_conector = stringUtil.transformarTodoEnMayusculas(dato.tipo_conector)
@@ -149,8 +148,15 @@ class ElementoControl {
     const dao = new DAO()
     try {
 
+      const validacionDatosObligatorios = this.validarDatosObligatorios(dato)
+      if (validacionDatosObligatorios.codigo !== 200) {
+        return {
+          codigo: validacionDatosObligatorios.codigo,
+          respuesta: validacionDatosObligatorios.respuesta
+        }
+      }
+
       const stringUtil = new StringUtil()
-      dato.descripcion = stringUtil.transformarTodoEnMayusculas(dato.descripcion)
       dato.codigo = stringUtil.transformarTodoEnMayusculas(dato.codigo)
       dato.categoria = stringUtil.transformarTodoEnMayusculas(dato.categoria)
       dato.tipo_conector = stringUtil.transformarTodoEnMayusculas(dato.tipo_conector)

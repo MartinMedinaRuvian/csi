@@ -1,7 +1,7 @@
 class ElementoPasivo {
 
   id
-  descripcion
+  id_tipo_dispositivo_pasivo
   codigo
   observacion
   codigo_inventario
@@ -16,7 +16,7 @@ class ElementoPasivo {
   id_usuario
   
   constructor(
-    descripcion,
+    id_tipo_dispositivo_pasivo,
     codigo,
     observacion,
     codigo_inventario,
@@ -30,7 +30,7 @@ class ElementoPasivo {
     id_gabinete,
     id_usuario
   ) {
-    this.descripcion = descripcion;
+    this.id_tipo_dispositivo_pasivo = id_tipo_dispositivo_pasivo;
     this.codigo = codigo;
     this.observacion = observacion;
     this.codigo_inventario = codigo_inventario;

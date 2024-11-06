@@ -19,17 +19,17 @@ class ElementoDAO {
     }
 
     async verInfoPrincipalPorIdGabinete(id_gabinete) {
-        const datos = await conexion.query('SELECT e.id, e.descripcion, e.codigo, e.estado FROM ' + nombreTabla + ' e WHERE e.id_gabinete=?' + " AND e.estado='A'" + " ORDER BY e.codigo ASC", [id_gabinete])
+        const datos = await conexion.query('SELECT e.id, e.codigo, e.estado, e.id_tipo_dispositivo_pasivo, td.descripcion AS tipo_dispositivo FROM ' + nombreTabla + ' e INNER JOIN tipo_dispositivo_pasivo td ON td.id = e.id_tipo_dispositivo_pasivo WHERE e.id_gabinete=?' + " AND e.estado='A'" + " ORDER BY e.codigo ASC", [id_gabinete])
         return datos
     }
 
     async verPorIdGabinete(id_gabinete) {
-        const datos = await conexion.query('SELECT e.id, e.descripcion, e.codigo, e.observacion, e.codigo_inventario, e.categoria, e.numero_puertos, e.tipo_conector, e.ruta_imagen, e.fecha_creacion, e.fecha_actualizacion, e.estado, e.id_gabinete, e.id_usuario FROM ' + nombreTabla + ' e WHERE e.id_gabinete=?' + " AND e.estado='A'" + " ORDER BY e.codigo ASC", [id_gabinete])
+        const datos = await conexion.query('SELECT e.id, e.codigo, e.observacion, e.codigo_inventario, e.categoria, e.numero_puertos, e.tipo_conector, e.ruta_imagen, e.fecha_creacion, e.fecha_actualizacion, e.estado, e.id_gabinete, e.id_usuario, e.id_tipo_dispositivo_pasivo, td.descripcion AS tipo_dispositivo FROM ' + nombreTabla + ' e INNER JOIN tipo_dispositivo_pasivo td ON td.id = e.id_tipo_dispositivo_pasivo WHERE e.id_gabinete=?' + " AND e.estado='A'" + " ORDER BY e.codigo ASC", [id_gabinete])
         return datos
     }
 
     async verInfo(id) {
-        const datos = await conexion.query('SELECT e.id, e.descripcion, e.codigo, e.observacion, e.codigo_inventario, e.categoria, e.numero_puertos, e.tipo_conector, e.ruta_imagen, e.fecha_creacion, e.fecha_actualizacion, e.estado, e.id_gabinete, e.id_usuario FROM ' + nombreTabla + ' e WHERE e.id=?', [id])
+        const datos = await conexion.query('SELECT e.id, e.codigo, e.observacion, e.codigo_inventario, e.categoria, e.numero_puertos, e.tipo_conector, e.ruta_imagen, e.fecha_creacion, e.fecha_actualizacion, e.estado, e.id_gabinete, e.id_usuario, e.id_tipo_dispositivo_pasivo, td.descripcion AS tipo_dispositivo FROM ' + nombreTabla + ' e INNER JOIN tipo_dispositivo_pasivo td ON td.id = e.id_tipo_dispositivo_pasivo WHERE e.id=?', [id])
         return datos[0]
     }
 
@@ -46,7 +46,7 @@ class ElementoDAO {
 
     async guardar(dato) {
         const {
-          descripcion,
+          id_tipo_dispositivo_pasivo,
           codigo,
           observacion,
           codigo_inventario,
@@ -61,7 +61,7 @@ class ElementoDAO {
           id_usuario
         } = dato;
         const datoGuardar = new Elemento(
-          descripcion,
+          id_tipo_dispositivo_pasivo,
           codigo,
           observacion,
           codigo_inventario,
