@@ -47,7 +47,7 @@ rutas.post('/ingresar', async (req, res) => {
     const token = jwt.sign({
       email
     }, process.env.TOKEN_SECRETO,
-    { expiresIn: '1800s' })
+    { expiresIn: process.env.TIEMPO_TOKEN })
     
     control.respuesta.token = token
   }

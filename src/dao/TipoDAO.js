@@ -1,5 +1,6 @@
 const Tipo = require('../modelo/Tipo')
 const conexion = require('../util/conexion_mysql')
+const GenerarQueryActualizarDB = require('../util/generar_query_actualizar_db')
 
 let nombreTabla = 'tipo_elemento'
 const idPropiedad = 'id'

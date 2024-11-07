@@ -110,11 +110,15 @@ class TipoControl {
   async actualizar(dato) {
     const dao = new DAO(this.nombreTabla)
     try {
-      dato.descripcion = dato.nombre.toUpperCase()
-      dato.fecha_actualizacion = new FechaUti().fechaActual()
-      if (dato.descripcion != null && dato.descripcion != undefined){
-        dato.descripcion = dato.nombre.toUpperCase()
+      const validacionDatosObligatorios = this.validarDatosObligatorios(dato)
+      if (validacionDatosObligatorios.codigo !== 200) {
+        return {
+          codigo: validacionDatosObligatorios.codigo,
+          respuesta: validacionDatosObligatorios.respuesta
+        }
       }
+      dato.descripcion = dato.descripcion.toUpperCase()
+      dato.fecha_actualizacion = new FechaUti().fechaActual()
       if (await dao.actualizar(dato)) {
         return {
           codigo: 200,
@@ -127,6 +131,7 @@ class TipoControl {
         }
       }
     } catch (error) {
+      console.log(error)
       return {
         codigo: 500,
         respuesta: error
