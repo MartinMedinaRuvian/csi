@@ -1,4 +1,4 @@
-const DAO = require('../DAO/RolDAO')
+const DAO = require('../dao/RolDAO')
 
 class RolControl {
 
