@@ -64,7 +64,8 @@ class UsuarioDAO{
         return actualizar.affectedRows > 0
     }
 
-    async cambiarEstado(estado, id){      
+    async cambiarEstado(estado, id){    
+        console.log(estado, id)  
         const cambiar = await conexion.query('UPDATE ' + nombreTabla + ' SET estado=? WHERE ' + idPropiedad + '=?', [estado, id])
         return cambiar.affectedRows > 0
     }

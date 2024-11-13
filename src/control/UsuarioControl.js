@@ -234,10 +234,10 @@ class UsuarioControl {
   }
 
   async cambiarEstado(dato) {
-    const { estado, codigo } = dato
+    const { estado, id } = dato
     try {
       const dao = new DAO()
-      if (await dao.cambiarEstado(estado, codigo)) {
+      if (await dao.cambiarEstado(estado, id)) {
         return {
           codigo: 200,
           respuesta: 'Correcto'
