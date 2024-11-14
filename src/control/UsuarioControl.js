@@ -275,6 +275,14 @@ class UsuarioControl {
     }
   }
 
+  actualizarPassword(email, newPassword){
+    console.log(email, newPassword)
+    return {
+      codigo: 200,
+      respuesta: email
+    }
+  }
+
 
 }
 
