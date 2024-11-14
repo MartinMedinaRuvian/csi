@@ -12,7 +12,7 @@ class ProyectoControl {
   }
 
   validarDatosObligatorios(dato) {
-    const datosObligatorios = ['codigo', 'nombre_empresa', 'nit_empresa', 'fecha']
+    const datosObligatorios = ['codigo', 'descripcion', 'nombre_empresa', 'nit_empresa', 'fecha']
     const validarPropiedadesObligatorias = new ValidacionPropiedadesObligatorias()
     const validacionPropiedadObligatoria = validarPropiedadesObligatorias.validar(dato, datosObligatorios)
     return {
@@ -59,6 +59,7 @@ class ProyectoControl {
 
       const stringUtil = new StringUtil()
       datos.codigo = stringUtil.transformarTodoEnMayusculas(datos.codigo)
+      datos.descripcion = stringUtil.transformarTodoEnMayusculas(datos.descripcion)
       datos.nombre_empresa = stringUtil.transformarTodoEnMayusculas(datos.nombre_empresa)
       datos.fecha_creacion = new FechaUti().fechaActual()
       datos.estado = 'A'
@@ -93,6 +94,19 @@ class ProyectoControl {
   async actualizar(dato) {
     const dao = new DAO('')
     try {
+
+      const validacionDatosObligatorios = this.validarDatosObligatorios(dato)
+      if (validacionDatosObligatorios.codigo !== 200) {
+        return {
+          codigo: validacionDatosObligatorios.codigo,
+          respuesta: validacionDatosObligatorios.respuesta
+        }
+      }
+
+      const stringUtil = new StringUtil()
+      dato.codigo = stringUtil.transformarTodoEnMayusculas(dato.codigo)
+      dato.descripcion = stringUtil.transformarTodoEnMayusculas(dato.descripcion)
+      dato.nombre_empresa = stringUtil.transformarTodoEnMayusculas(dato.nombre_empresa)
       dato.fecha_actualizacion = new FechaUti().fechaActual()
       if (await dao.actualizar(dato)) {
         return {

@@ -2,6 +2,7 @@ class Proyecto {
 
   id
   codigo
+  descripcion
   certificacion
   nombre_empresa
   nit_empresa
@@ -10,8 +11,9 @@ class Proyecto {
   fecha_actualizacion
   estado
 
-  constructor(codigo, certificacion, nombre_empresa, nit_empresa, fecha, fecha_creacion, fecha_actualizacion, estado){
+  constructor(codigo, descripcion, certificacion, nombre_empresa, nit_empresa, fecha, fecha_creacion, fecha_actualizacion, estado){
     this.codigo = codigo
+    this.descripcion = descripcion
     this.certificacion = certificacion
     this.nombre_empresa = nombre_empresa
     this.nit_empresa = nit_empresa

@@ -14,8 +14,8 @@ class ProyectoDAO {
   }
 
   async guardarProyecto(dato) {
-    const { codigo, certificacion, nombre_empresa, nit_empresa, fecha, fecha_creacion, estado } = dato
-    const datoGuardar = new Proyecto(codigo, certificacion, nombre_empresa, nit_empresa, fecha, fecha_creacion, null, estado)
+    const { codigo, descripcion, certificacion, nombre_empresa, nit_empresa, fecha, fecha_creacion, estado } = dato
+    const datoGuardar = new Proyecto(codigo, descripcion, certificacion, nombre_empresa, nit_empresa, fecha, fecha_creacion, null, estado)
     const guardar = await conexion.query('INSERT INTO ' + nombreTablaGeneral + ' SET ?', [datoGuardar])
     return guardar.affectedRows > 0 ? guardar.insertId : -1
   }
@@ -32,7 +32,7 @@ class ProyectoDAO {
   async verTodosProyectosPorIdRegistro(id) {
     const nombreTablaConsultar = this.nombreTabla + '_proyecto'
     const columnaTablaConsultar = 'id_' + this.nombreTabla
-    const datos = await conexion.query('SELECT p.id, p.codigo, p.certificacion, p.nombre_empresa, p.nit_empresa, p.fecha, p.estado FROM ' + nombreTablaConsultar + ' INNER JOIN proyecto p ON p.id = id_proyecto WHERE ' + columnaTablaConsultar + '=?', [id])
+    const datos = await conexion.query('SELECT p.id, p.codigo, p.descripcion, p.certificacion, p.nombre_empresa, p.nit_empresa, p.fecha, p.estado FROM ' + nombreTablaConsultar + ' INNER JOIN proyecto p ON p.id = id_proyecto WHERE ' + columnaTablaConsultar + '=?', [id])
     return datos
   }
 
@@ -60,7 +60,7 @@ class ProyectoDAO {
 
   async verInfo(id_proyecto) {
     console.log(id_proyecto, 'ver infoooo')
-    const datos = await conexion.query('SELECT id, codigo, certificacion, nombre_empresa, nit_empresa, fecha, estado FROM ' + nombreTablaGeneral + ' WHERE id=?', [id_proyecto])
+    const datos = await conexion.query('SELECT id, codigo, descripcion, certificacion, nombre_empresa, nit_empresa, fecha, estado FROM ' + nombreTablaGeneral + ' WHERE id=?', [id_proyecto])
     return datos[0]
   }
 

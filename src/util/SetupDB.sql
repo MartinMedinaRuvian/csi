@@ -93,6 +93,7 @@
   create table if not exists proyecto(
     id int(100) not null auto_increment primary key,
     codigo char(100) not null,
+    descripcion char(255) not null,
     certificacion char(200),
     nombre_empresa char(200) not null,
     nit_empresa char(50) not null,
