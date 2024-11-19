@@ -17,6 +17,11 @@ rutas.get('/:id', async (req, res) => {
   res.status(control.codigo).json(control.respuesta)
 });
 
+rutas.get('/', async (req, res) => {
+  const ctr = new ProyectoControl('');
+  const control = await ctr.verInfoPrincipal()
+  res.status(control.codigo).json(control.respuesta)
+});
 
 rutas.post('/:nombre_tabla/:id_registro_tabla', async (req, res) => {
   const { nombre_tabla, id_registro_tabla } = req.params

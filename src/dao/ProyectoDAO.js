@@ -42,6 +42,11 @@ class ProyectoDAO {
     return yaExiste.length > 0
   }
 
+  async verInfoPrincipal() {
+    const datos = await conexion.query("SELECT codigo, descripcion, id FROM " + nombreTablaGeneral)
+    return datos
+  }
+
   async yaExisteProyectoEnElemento(codigo, id) {
     const nombreTablaConsultar = this.nombreTabla + '_proyecto'
     const columnaTablaConsultar = 'id_' + this.nombreTabla
