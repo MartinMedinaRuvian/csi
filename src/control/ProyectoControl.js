@@ -163,6 +163,20 @@ class ProyectoControl {
   }
 
 
+  async eliminarSoloProyectoTabla(idProyecto, idRegistroTabla) {
+    try {
+      console.log(idProyecto, idRegistroTabla)
+      const dao = new DAO(this.nombreTabla)
+      if (await dao.eliminarProyectoTabla(idProyecto, idRegistroTabla)) {
+        return true
+      }
+    } catch (error) {
+      console.log(error)
+    }
+    return false
+  }
+
+
 }
 
 module.exports = ProyectoControl
