@@ -2,6 +2,8 @@ const express = require('express');
 const rutas = express.Router();
 const jwt = require('jsonwebtoken');
 require("dotenv").config();
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 const Control = require('../control/UsuarioControl');
 const ControlPasswordReset = require('../control/PasswordResetControl');
@@ -80,19 +82,17 @@ rutas.get('/enviar-email-password-reset/:email', async (req, res) => {
 rutas.post('/reset-password', async (req, res) => {
   const { token, newPassword } = req.body;
   try {
-    // Verificar el token
-    const decoded = jwt.verify(token, process.env.TOKEN_SECRETO);
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const decoded = jwt.verify(token, process.env.TOKEN_SECRETO_CAMBIO_PASSWORD);
+    const email = decoded.email
+    const passwordActualizar = bcrypt.hashSync(newPassword, saltRounds);
 
-    // Aquí puedes actualizar la contraseña en la base de datos
-    // Ejemplo: await User.updatePassword(decoded.email, hashedPassword);
     const ctr = new Control()
-    const control = await ctr.actualizarPassword(decoded.email, hashedPassword)
+    const control = await ctr.actualizarPassword(email, passwordActualizar)
     res.status(control.codigo).json(control.respuesta)
 
-    //res.status(200).json(decoded.email)
   } catch (error) {
-    res.status(400).json({ error: 'Token inválido o expirado' });
+    console.log(error, 'error')
+    res.status(500).json('Token inválido o expirado');
   }
 })
 

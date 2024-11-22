@@ -156,11 +156,7 @@ class UsuarioControl {
           respuesta: validacionDatosObligatorios.respuesta
         }
       }
-      dato.password = this.eliminarEspaciosEnBlanco(dato.password)
-      dato.nombre_completo = dato.nombre_completo.toUpperCase()
       dato.email = this.eliminarEspaciosEnBlanco(dato.email)
-      dato.password = bcrypt.hashSync(dato.password, saltRounds);
-      dato.estado = 'A'
       const dao = new DAO();
       const yaExiste = await dao.yaExiste(dato.email);
       if (yaExiste) {
@@ -169,7 +165,10 @@ class UsuarioControl {
           respuesta: 'Ya existe'
         }
       } else {
-        dato.estado = "0"
+        dato.password = this.eliminarEspaciosEnBlanco(dato.password)
+        dato.nombre_completo = dato.nombre_completo.toUpperCase()
+        dato.password = bcrypt.hashSync(dato.password, saltRounds);
+        dato.estado = 'A'
         const codigoGuardar = await dao.guardar(dato);
         if (codigoGuardar > -1) {
           return {
@@ -275,11 +274,23 @@ class UsuarioControl {
     }
   }
 
-  actualizarPassword(email, newPassword){
+  async actualizarPassword(email, newPassword){
     console.log(email, newPassword)
-    return {
-      codigo: 200,
-      respuesta: email
+    const dao = new DAO()
+
+    try {
+      if (dao.cambiarPasswordPorEmail(email, newPassword)){
+        return {
+          codigo: 200,
+          respuesta: 'Se actualizo la contraseña correctamente'
+        }
+      }
+    } catch (error) {
+      console.log(error)
+      return {
+        codigo: 500,
+        respuesta: error
+      }
     }
   }
 
