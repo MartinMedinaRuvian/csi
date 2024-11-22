@@ -2,8 +2,10 @@ const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
 const cors = require('cors');
-const verificarToken = require('./util/validar_token')
 //const history = require('connect-history-api-fallback');
+const verificarToken = require('./util/validar_token')
+const logMiddleware = require('./util/log_historico');
+
 
 const app = express();
 
@@ -14,6 +16,7 @@ app.use(cors())
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
+//app.use(logMiddleware);
 /**
  * El history le permite al backend relacionar el modo history de vue para que las rutas se maneje directamente en el front
  */
@@ -52,18 +55,17 @@ const mantenimientoEndpoint = require('./endpoints/MantenimientoEndpoint')
  */
 app.use('/usuario', usuarioEndpoint)
 app.use('/rol', rolEndpoint)
-app.use('/archivo', verificarToken, archivosEndpoint)
-app.use('/imagen', verificarToken, imagenEndpoint)
-app.use('/edificio', verificarToken, edificioEndpoint)
-app.use('/centro_cableado', verificarToken, centroCableadoEndpoint)
-app.use('/gabinete', verificarToken, gabineteEndpoint)
-app.use('/tipo_gabinete', verificarToken, tipoGabineteEndpoint)
-app.use('/elemento_activo', verificarToken, elementoActivoEndpoint)
-app.use('/elemento_pasivo', verificarToken, elementoPasivoEndpoint)
-app.use('/tipo_elemento', verificarToken, tipoElementoEndpoint)
-app.use('/tipo', verificarToken, tipoEndpoint)
-app.use('/proyecto', verificarToken, proyectoEndpoint)
-app.use('/mantenimiento', verificarToken, mantenimientoEndpoint)
-
+app.use('/archivo', verificarToken, logMiddleware, archivosEndpoint)
+app.use('/imagen', verificarToken, logMiddleware, imagenEndpoint)
+app.use('/edificio', verificarToken, logMiddleware, edificioEndpoint)
+app.use('/centro_cableado', verificarToken, logMiddleware, centroCableadoEndpoint)
+app.use('/gabinete', verificarToken, logMiddleware, gabineteEndpoint)
+app.use('/tipo_gabinete', verificarToken, logMiddleware, tipoGabineteEndpoint)
+app.use('/elemento_activo', verificarToken, logMiddleware, elementoActivoEndpoint)
+app.use('/elemento_pasivo', verificarToken, logMiddleware, elementoPasivoEndpoint)
+app.use('/tipo_elemento', verificarToken, logMiddleware, tipoElementoEndpoint)
+app.use('/tipo', verificarToken, logMiddleware, tipoEndpoint)
+app.use('/proyecto', verificarToken, logMiddleware, proyectoEndpoint)
+app.use('/mantenimiento', verificarToken, logMiddleware, mantenimientoEndpoint)
 
 module.exports = app;

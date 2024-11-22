@@ -5,20 +5,17 @@ const DAO = require('../dao/UsuarioDAO');
 
 class PasswordResetControl {
 
-  async verificarExistenciaEmail(email) {
+  async verInfoPorEmail(email) {
     const dao = new DAO()
-    if (await dao.yaExiste(email)) {
-      return true
-    }
-    return false
+    return await dao.verInfoPorEmail(email)
   }
 
   async sendPasswordResetEmail(userEmail) {
     try {
-      const existeEmail = await this.verificarExistenciaEmail(userEmail)
-      console.log(existeEmail)
-      if (existeEmail) {
-        const token = jwt.sign({ email: userEmail }, process.env.TOKEN_SECRETO_CAMBIO_PASSWORD, { expiresIn: '15m' });
+      const infoPorEmail = await this.verInfoPorEmail(userEmail)
+      console.log(infoPorEmail)
+      if (infoPorEmail !== null && infoPorEmail !== undefined) {
+        const token = jwt.sign({ email: userEmail, id: infoPorEmail.id }, process.env.TOKEN_SECRETO_CAMBIO_PASSWORD, { expiresIn: '15m' });
         const resetLink = `http://${process.env.SERVER}:${process.env.PUERTO_SERVER}/reset-password?token=${token}`;
 
         const mailOptions = {
@@ -32,12 +29,12 @@ class PasswordResetControl {
         console.log('Correo de recuperación enviado');
         return {
           codigo: 200,
-          respuesta: { mensaje: 'Correo de recuperación enviado' }
+          respuesta: 'Correo de recuperación enviado'
         }
       } else {
         return {
           codigo: 500,
-          respuesta: { mensaje: 'Email no existente' }
+          respuesta: 'Email no existente'
         }
       }
 

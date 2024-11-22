@@ -354,3 +354,13 @@ values ('Cisco', '2024-10-25', 'A'),
     constraint elemento_pasivo_mantenimiento_elemento_pasivo_llave foreign key (id_elemento_pasivo) references elemento_pasivo(id) on delete cascade,
     constraint elemento_pasivo_mantenimiento_mantenimiento_llave foreign key (id_mantenimiento) references mantenimiento(id) on delete cascade
   );
+
+  CREATE TABLE if not exists log_historico(
+    id int not null auto_increment primary key,
+    id_usuario int(100) not null,
+    email_usuario char(200) not null,
+    accion char(255) not null,
+    observacion char(255),
+    ip_address char(100),
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
+  );

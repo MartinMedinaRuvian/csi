@@ -22,6 +22,11 @@ class UsuarioDAO{
         return datos[0]
     }
 
+    async verInfoPorEmail(email){
+        const datos = await conexion.query('SELECT id, estado, email, nombre_completo, rol_id FROM ' + nombreTabla + ' WHERE email=?', [email])
+        return datos[0]
+    }
+
     async yaExiste(email){
         const yaExiste = await conexion.query('SELECT email FROM ' + nombreTabla + ' WHERE email=?', [email]);       
         return yaExiste.length > 0
