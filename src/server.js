@@ -49,6 +49,7 @@ const tipoElementoEndpoint = require('./endpoints/TipoElementoEndpoint')
 const tipoEndpoint = require('./endpoints/TipoEndpoint')
 const proyectoEndpoint = require('./endpoints/ProyectoEndpoint')
 const mantenimientoEndpoint = require('./endpoints/MantenimientoEndpoint')
+const logEndpoint = require('./endpoints/LogEndpoint')
 
 /**
  * configuro las rutas del servidor
@@ -67,5 +68,6 @@ app.use('/tipo_elemento', verificarToken, logMiddleware, tipoElementoEndpoint)
 app.use('/tipo', verificarToken, logMiddleware, tipoEndpoint)
 app.use('/proyecto', verificarToken, logMiddleware, proyectoEndpoint)
 app.use('/mantenimiento', verificarToken, logMiddleware, mantenimientoEndpoint)
+app.use('/log', verificarToken, logEndpoint)
 
 module.exports = app;

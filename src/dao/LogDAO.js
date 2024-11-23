@@ -1,18 +1,31 @@
 const conexion = require('../util/conexion_mysql')
-const GenerarQueryActualizarDB = require('../util/generar_query_actualizar_db')
 
 const nombreTabla = 'log_historico'
 const idPropiedad = 'id'
 
-class EdificioDAO {
+class LogDAO {
 
     async obtenerTodos() {
-        const datos = await conexion.query("SELECT * FROM " + nombreTabla + " WHERE estado='A'" + " ORDER BY " + idPropiedad + " DESC")
+        const datos = await conexion.query("SELECT * FROM " + nombreTabla + " ORDER BY " + idPropiedad + " DESC")
         return datos
     }
 
     async obtenerFiltrado(condicion, buscar) {
-        const datos = await conexion.query('SELECT * FROM ' + nombreTabla + " WHERE " + condicion + " LIKE '%" + buscar + "%' AND estado=0" + " ORDER BY " + idPropiedad + " DESC")
+        const datos = await conexion.query('SELECT * FROM ' + nombreTabla + " WHERE " + condicion + " LIKE '%" + buscar + "%' ORDER BY " + idPropiedad + " DESC")
+        return datos
+    }
+
+    async obtenerEntreFechas(fechaInicial, fechaFinal){
+        const datos = await conexion.query('SELECT * FROM ' + nombreTabla + " WHERE timestamp between '" + fechaInicial + "' and '" + fechaFinal + "' ORDER BY id desc")
+        return datos
+    }
+
+    async obtenerFiltradoEntreFechas(condicion, buscar, fechaInicial, fechaFinal, limite){
+        let limiteRegistros = ' LIMIT ' + limite
+        if (limite === -1) {
+            limiteRegistros = ''
+        }
+        const datos = await conexion.query('SELECT * FROM ' + nombreTabla + " WHERE " + condicion + " LIKE '%"+ buscar + "%' AND timestamp between '" + fechaInicial + "' and '" + fechaFinal + "' ORDER BY id desc")
         return datos
     }
 
@@ -34,30 +47,7 @@ class EdificioDAO {
         return guardar.affectedRows > 0 ? guardar.insertId : -1
     }
 
-    async cambiarEstado(estado, id) {
-        const cambiar = await conexion.query('UPDATE ' + nombreTabla + ' SET estado=? WHERE ' + idPropiedad + '=?', [estado, id])
-        return cambiar.affectedRows > 0
-    }    
-    
-    async actualizar(dato) {
-        console.log(dato)
-        const generarQueryActualizarDB = new GenerarQueryActualizarDB(dato, nombreTabla, idPropiedad, Edificio)
-        const consulta = await generarQueryActualizarDB.consultaGenerada()
-        const valores = await generarQueryActualizarDB.valoresGenerados()
-        try {
-            const resultado = await conexion.query(consulta, valores);
-            return resultado.affectedRows > 0;
-        } catch (error) {
-            console.error('Error al actualizar:', error);
-        }
-        return false
-    }
-    
-    async eliminar(id) {
-        const eliminar = await conexion.query('DELETE FROM ' + nombreTabla + ' WHERE ' + idPropiedad + '=?', [id]);
-        return eliminar.affectedRows > 0
-    }
 
 }
 
-module.exports = EdificioDAO
+module.exports = LogDAO
