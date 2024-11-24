@@ -21,10 +21,6 @@ class LogDAO {
     }
 
     async obtenerFiltradoEntreFechas(condicion, buscar, fechaInicial, fechaFinal, limite){
-        let limiteRegistros = ' LIMIT ' + limite
-        if (limite === -1) {
-            limiteRegistros = ''
-        }
         const datos = await conexion.query('SELECT * FROM ' + nombreTabla + " WHERE " + condicion + " LIKE '%"+ buscar + "%' AND timestamp between '" + fechaInicial + "' and '" + fechaFinal + "' ORDER BY id desc")
         return datos
     }
