@@ -30,12 +30,117 @@ class MantenimientoDAO {
     return guardar.affectedRows > 0 ? guardar.insertId : -1
   }
 
-  async verTodosMantenimientosPorIdRegistro(id) {
-    const nombreTablaConsultar = this.nombreTabla + '_mantenimiento'
-    const columnaTablaConsultar = 'id_' + this.nombreTabla
-    const datos = await conexion.query('SELECT m.id, m.codigo, m.observacion, m.realizado_por, m.fecha, m.estado FROM ' + nombreTablaConsultar + ' INNER JOIN mantenimiento m ON m.id = id_mantenimiento WHERE ' + columnaTablaConsultar + '=?', [id])
-    return datos
+  async verTodosMantenimientosPorIdRegistroObtenerFiltrado(id, condicion, buscar, limite, offset) {
+    const nombreTablaConsultar = this.nombreTabla + '_mantenimiento';
+    const columnaTablaConsultar = 'id_' + this.nombreTabla;
+
+    const query = `
+        SELECT 
+            m.id, m.codigo, m.observacion, m.realizado_por, m.fecha, m.estado 
+        FROM ${nombreTablaConsultar} t
+        INNER JOIN mantenimiento m
+            ON m.id = id_mantenimiento
+        WHERE 
+            ${columnaTablaConsultar} = ? 
+            AND ${condicion} LIKE ? 
+        ORDER BY 
+            m.id DESC 
+        LIMIT ? OFFSET ?;
+    `;
+
+    const totalQuery = `
+        SELECT 
+            COUNT(*) AS total 
+        FROM ${nombreTablaConsultar} t
+        INNER JOIN mantenimiento m
+            ON m.id = id_mantenimiento
+        WHERE 
+            ${columnaTablaConsultar} = ? 
+            AND ${condicion} LIKE ?;
+    `;
+
+    const datos = await conexion.query(query, [id, `%${buscar}%`, limite, offset]);
+    const totalResult = await conexion.query(totalQuery, [id, `%${buscar}%`]);
+
+    return { datos, total: totalResult[0].total };
   }
+
+
+
+  async verTodosMantenimientosPorIdRegistroEntreFechas(id, fechaInicial, fechaFinal, limite, offset) {
+    const nombreTablaConsultar = this.nombreTabla + '_mantenimiento';
+    const columnaTablaConsultar = 'id_' + this.nombreTabla;
+
+    const query = `
+      SELECT 
+          m.id, m.codigo, m.observacion, m.realizado_por, m.fecha, m.estado 
+      FROM ${nombreTablaConsultar} t
+      INNER JOIN mantenimiento m
+          ON m.id = id_mantenimiento
+      WHERE 
+          ${columnaTablaConsultar} = ? 
+          AND m.fecha BETWEEN ? AND ?
+      ORDER BY 
+          m.id DESC 
+      LIMIT ? OFFSET ?;
+  `;
+
+    const totalQuery = `
+      SELECT 
+          COUNT(*) AS total 
+      FROM ${nombreTablaConsultar} t
+      INNER JOIN mantenimiento m
+          ON m.id = id_mantenimiento
+      WHERE 
+          ${columnaTablaConsultar} = ? 
+          AND m.fecha BETWEEN ? AND ?;
+  `;
+
+    const datos = await conexion.query(query, [id, fechaInicial, fechaFinal, limite, offset]);
+    const totalResult = await conexion.query(totalQuery, [id, fechaInicial, fechaFinal]);
+
+    return { datos, total: totalResult[0].total };
+  }
+
+
+
+  async verTodosMantenimientosPorIdRegistroFiltroFechas(id, fechaInicial, fechaFinal, condicion, buscar, limite, offset) {
+    const nombreTablaConsultar = this.nombreTabla + '_mantenimiento';
+    const columnaTablaConsultar = 'id_' + this.nombreTabla;
+
+    const query = `
+      SELECT 
+          m.id, m.codigo, m.observacion, m.realizado_por, m.fecha, m.estado 
+      FROM ${nombreTablaConsultar} t
+      INNER JOIN mantenimiento m
+          ON m.id = id_mantenimiento
+      WHERE 
+          ${columnaTablaConsultar} = ? 
+          AND m.fecha BETWEEN ? AND ? 
+          AND ${condicion} LIKE ?
+      ORDER BY m.id DESC 
+      LIMIT ? OFFSET ?;
+  `;
+
+    const totalQuery = `
+      SELECT 
+          COUNT(*) AS total 
+      FROM ${nombreTablaConsultar} t
+      INNER JOIN mantenimiento m
+          ON m.id = id_mantenimiento
+      WHERE 
+          ${columnaTablaConsultar} = ? 
+          AND m.fecha BETWEEN ? AND ? 
+          AND ${condicion} LIKE ?;
+  `;
+
+    const datos = await conexion.query(query, [id, fechaInicial, fechaFinal, `%${buscar}%`, limite, offset]);
+    const totalResult = await conexion.query(totalQuery, [id, fechaInicial, fechaFinal, `%${buscar}%`]);
+
+    return { datos, total: totalResult[0].total };
+  }
+
+
 
   async yaExisteMantenimiento(codigo) {
     const yaExiste = await conexion.query('SELECT codigo FROM ' + nombreTablaGeneral + ' WHERE codigo=?', [codigo])

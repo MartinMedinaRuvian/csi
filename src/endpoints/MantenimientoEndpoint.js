@@ -10,6 +10,24 @@ rutas.get('/:nombre_tabla/:id', async (req, res) => {
   res.status(200).json(proyectos)
 });
 
+
+rutas.post('/buscarporcondicion/:nombre_tabla/:id', async (req, res) => {
+  const { condicion, buscar, fechaInicial, fechaFinal, buscarPor, limite, pagina } = req.body;
+  const {nombre_tabla, id} = req.params
+  const offset = (pagina - 1) * limite;
+  const ctr = new MantenimientoControl(nombre_tabla);
+  let control;
+  if (buscarPor === 2) {
+      control = await ctr.verTodosMantenimientosRegistroEntreFechas(id, fechaInicial, fechaFinal, limite, offset);
+  } else if (buscarPor === 3) {
+      control = await ctr.verTodosMantenimientosRegistroFiltrosFecha(id, fechaInicial, fechaFinal, condicion, buscar, limite, offset);
+  } else {
+      control = await ctr.verTodosMantenimientosRegistroObtenerFiltrado(id, condicion, buscar, limite, offset);
+  }
+
+  res.status(control.codigo).json(control.respuesta);
+});
+
 rutas.get('/:id', async (req, res) => {
   const { id } = req.params
   const ctr = new MantenimientoControl('');

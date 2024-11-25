@@ -90,8 +90,54 @@ class MantenimientoControl {
     }
   }
 
-  async verTodosMantenimientosRegistro(id) {
-    return await new DAO(this.nombreTabla).verTodosMantenimientosPorIdRegistro(id)
+  async verConFiltro(condicion, buscar, limite, offset) {
+    try {
+      const dao = new DAO();
+      const { datos, total } = await dao.obtenerFiltrado(condicion, buscar, limite, offset);
+      return {
+        codigo: 200,
+        respuesta: { datos, total }
+      };
+    } catch (error) {
+      return { codigo: 500, respuesta: error };
+    }
+  }
+
+  async verTodosMantenimientosRegistroObtenerFiltrado(id, condicion, buscar, limite, offset) {
+    try {
+     const { datos, total } = await new DAO(this.nombreTabla).verTodosMantenimientosPorIdRegistroObtenerFiltrado(id, condicion, buscar, limite, offset)
+     return {
+      codigo: 200,
+      respuesta: { datos, total }
+    };
+    } catch (error) {
+      return { codigo: 500, respuesta: error };
+    }
+  }
+
+  async verTodosMantenimientosRegistroEntreFechas(id, fechaInicial, fechaFinal, limite, offset) {
+    try {
+      const { datos, total } = await new DAO(this.nombreTabla).verTodosMantenimientosPorIdRegistroEntreFechas(id, fechaInicial, fechaFinal, limite, offset)
+      return {
+        codigo: 200,
+        respuesta: { datos, total }
+      };
+    } catch (error) {
+      console.log(error)
+      return { codigo: 500, respuesta: error };
+    }
+  }
+
+  async verTodosMantenimientosRegistroFiltrosFecha(id, fechaInicial, fechaFinal, condicion, buscar, limite, offset) {
+    try {
+      const { datos, total } = await new DAO(this.nombreTabla).verTodosMantenimientosPorIdRegistroFiltroFechas(id, fechaInicial, fechaFinal, condicion, buscar, limite, offset)
+      return {
+        codigo: 200,
+        respuesta: { datos, total }
+      };
+    } catch (error) {
+      return { codigo: 500, respuesta: error };
+    }
   }
 
   async verInfoMantenimiento(idMantenimiento) {
