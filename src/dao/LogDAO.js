@@ -10,20 +10,63 @@ class LogDAO {
         return datos
     }
 
-    async obtenerFiltrado(condicion, buscar) {
-        const datos = await conexion.query('SELECT * FROM ' + nombreTabla + " WHERE " + condicion + " LIKE '%" + buscar + "%' ORDER BY " + idPropiedad + " DESC")
-        return datos
+    async obtenerFiltrado(condicion, buscar, limite, offset) {
+        console.log(condicion, buscar, limite, offset)
+        const datos = await conexion.query(`
+            SELECT * 
+            FROM ${nombreTabla} 
+            WHERE ${condicion} LIKE '%${buscar}%' 
+            ORDER BY ${idPropiedad} DESC 
+            LIMIT ${limite} OFFSET ${offset}
+        `);
+        const total = await conexion.query(`
+            SELECT COUNT(*) AS total 
+            FROM ${nombreTabla} 
+            WHERE ${condicion} LIKE '%${buscar}%'
+        `);
+        return { datos, total: total[0].total };
     }
 
-    async obtenerEntreFechas(fechaInicial, fechaFinal){
-        const datos = await conexion.query('SELECT * FROM ' + nombreTabla + " WHERE timestamp between '" + fechaInicial + "' and '" + fechaFinal + "' ORDER BY id desc")
-        return datos
+    async obtenerEntreFechas(timestampInicial, timestampFinal, limite, offset) {
+        console.log(timestampInicial, timestampFinal, limite, offset)
+        const datos = await conexion.query(`
+            SELECT * 
+            FROM ${nombreTabla} 
+            WHERE timestamp BETWEEN ? AND ? 
+            ORDER BY timestamp DESC 
+            LIMIT ? OFFSET ?
+        `, [timestampInicial, timestampFinal, limite, offset]);
+
+        const total = await conexion.query(`
+            SELECT COUNT(*) AS total 
+            FROM ${nombreTabla} 
+            WHERE timestamp BETWEEN ? AND ?
+        `, [timestampInicial, timestampFinal]);
+
+        return { datos, total: total[0].total };
     }
 
-    async obtenerFiltradoEntreFechas(condicion, buscar, fechaInicial, fechaFinal){
-        const datos = await conexion.query('SELECT * FROM ' + nombreTabla + " WHERE " + condicion + " LIKE '%"+ buscar + "%' AND timestamp between '" + fechaInicial + "' and '" + fechaFinal + "' ORDER BY id desc")
-        return datos
+    async obtenerFiltradoEntreFechas(condicion, buscar, timestampInicial, timestampFinal, limite, offset) {
+        console.log(condicion, buscar, timestampInicial, timestampFinal, limite, offset)
+        const datos = await conexion.query(`
+            SELECT * 
+            FROM ${nombreTabla} 
+            WHERE ${condicion} LIKE ? 
+              AND timestamp BETWEEN ? AND ?
+            ORDER BY timestamp DESC 
+            LIMIT ? OFFSET ?
+        `, [`%${buscar}%`, timestampInicial, timestampFinal, limite, offset]);
+
+        const total = await conexion.query(`
+            SELECT COUNT(*) AS total 
+            FROM ${nombreTabla} 
+            WHERE ${condicion} LIKE ? 
+              AND timestamp BETWEEN ? AND ?
+        `, [`%${buscar}%`, timestampInicial, timestampFinal]);
+
+        return { datos, total: total[0].total };
     }
+
 
     async verInfo(id) {
         const datos = await conexion.query('SELECT * FROM ' + nombreTabla + ' WHERE ' + idPropiedad + '=?', [id])
