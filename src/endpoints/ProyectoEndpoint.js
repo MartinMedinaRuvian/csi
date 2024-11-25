@@ -3,10 +3,11 @@ const rutas = express.Router();
 
 const ProyectoControl = require('../control/ProyectoControl');
 
-rutas.get('/:nombre_tabla/:id', async (req, res) => {
+rutas.post('/info_principal/:nombre_tabla/:id', async (req, res) => {
   const {nombre_tabla, id} = req.params
+  const {condicion, buscar} = req.body
   const ctr = new ProyectoControl(nombre_tabla);
-  const proyectos = await ctr.verTodosProyectosRegistro(id)
+  const proyectos = await ctr.verTodosProyectosRegistro(id, condicion, buscar)
   res.status(200).json(proyectos)
 });
 

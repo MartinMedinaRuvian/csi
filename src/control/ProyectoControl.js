@@ -138,8 +138,9 @@ class ProyectoControl {
     }
   }
 
-  async verTodosProyectosRegistro(id) {
-    return await new DAO(this.nombreTabla).verTodosProyectosPorIdRegistro(id)
+  async verTodosProyectosRegistro(id, condicion, buscar) {
+    console.log(condicion, buscar, 'titindj')
+    return await new DAO(this.nombreTabla).verTodosProyectosPorIdRegistro(id, condicion, buscar)
   }
 
   async verInfoProyecto(idProyecto) {

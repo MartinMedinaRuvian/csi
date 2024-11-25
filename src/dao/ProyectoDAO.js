@@ -29,11 +29,26 @@ class ProyectoDAO {
     return guardar.affectedRows > 0 ? guardar.insertId : -1
   }
 
-  async verTodosProyectosPorIdRegistro(id) {
+  async verTodosProyectosPorIdRegistro(id, condicion, buscar) {
     const nombreTablaConsultar = this.nombreTabla + '_proyecto'
     const columnaTablaConsultar = 'id_' + this.nombreTabla
-    const datos = await conexion.query('SELECT p.id, p.codigo, p.descripcion, p.certificacion, p.nombre_empresa, p.nit_empresa, p.fecha, p.estado FROM ' + nombreTablaConsultar + ' INNER JOIN proyecto p ON p.id = id_proyecto WHERE ' + columnaTablaConsultar + '=?', [id])
-    return datos
+    //const datos = await conexion.query('SELECT p.id, p.codigo, p.descripcion, p.certificacion, p.nombre_empresa, p.nit_empresa, p.fecha, p.estado FROM ' + nombreTablaConsultar + ' INNER JOIN proyecto p ON p.id = id_proyecto WHERE ' + columnaTablaConsultar + '=? AND ' + condicion + " LIKE %'" + buscar + "'% ORDER BY p.id DESC", [id])
+    const query = `
+    SELECT 
+        p.id, p.codigo, p.descripcion, p.certificacion, p.nombre_empresa, 
+        p.nit_empresa, p.fecha, p.estado 
+    FROM ${nombreTablaConsultar} t
+    INNER JOIN proyecto p 
+        ON p.id = t.id_proyecto
+    WHERE 
+        ${columnaTablaConsultar} = ? 
+        AND ${condicion} LIKE ?
+    ORDER BY p.id DESC
+`;
+
+    const values = [id, `%${buscar}%`];
+    const datos = await conexion.query(query, values);
+    return datos;
   }
 
   async yaExisteProyecto(codigo) {
