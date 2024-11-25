@@ -54,16 +54,18 @@ class ElementoControl {
     }
   }  
 
-  async verPorIdGabinete(id_gabinete) {
+  async verPorIdGabinete(id_gabinete, condicion, buscar) {
+    console.log(id_gabinete, condicion, buscar)
     const dao = new DAO();
     try {
-      const datos = await dao.verPorIdGabinete(id_gabinete)
+      const datos = await dao.verPorIdGabinete(id_gabinete, condicion, buscar)
       console.log(datos)
       return {
         codigo: 200,
         respuesta: datos
       }
     } catch (error) {
+      console.log(error)
       return {
         codigo: 500,
         respuesta: error

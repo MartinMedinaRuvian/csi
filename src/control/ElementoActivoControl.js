@@ -21,6 +21,20 @@ class ElementoControl {
     }
   }
 
+  async verConFiltro(condicion, buscar, limite, offset) {
+    try {
+      const dao = new DAO();
+      const { datos, total } = await dao.obtenerFiltrado(condicion, buscar, limite, offset);
+      return {
+        codigo: 200,
+        respuesta: { datos, total }
+      };
+    } catch (error) {
+      console.log(error)
+      return { codigo: 500, respuesta: error };
+    }
+  }
+
   async verInfo(id) {
     const dao = new DAO();
     try {
@@ -37,16 +51,17 @@ class ElementoControl {
     }
   }
 
-  async verPorIdGabinete(id_gabinete) {
+  async verPorIdGabinete(id_gabinete, condicion, buscar) {
     const dao = new DAO();
     try {
-      const datos = await dao.verPorIdGabinete(id_gabinete)
+      const datos = await dao.verPorIdGabinete(id_gabinete, condicion, buscar)
       console.log(datos)
       return {
         codigo: 200,
         respuesta: datos
       }
     } catch (error) {
+      console.log(error)
       return {
         codigo: 500,
         respuesta: error
@@ -54,21 +69,6 @@ class ElementoControl {
     }
   }
 
-  async verConFiltro(condicion, buscar) {
-    try {
-      const dao = new DAO()
-      const datos = await dao.obtenerFiltrado(condicion, buscar)
-      return {
-        codigo: 200,
-        respuesta: datos
-      }
-    } catch (error) {
-      return {
-        codigo: 500,
-        respuesta: error
-      }
-    }
-  }
 
   validarDatosObligatorios(dato) {
     const datosObligatorios = ['id_tipo_dispositivo_activo', 'id_tipo_referencia', 'id_tipo_modelo', 'codigo', 'serial', 'id_tipo_marca', 'id_gabinete', 'id_usuario']

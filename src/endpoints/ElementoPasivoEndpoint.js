@@ -16,11 +16,12 @@ rutas.get('/info/:id', async (req, res) => {
    res.status(control.codigo).json(control.respuesta)
 });
 
-rutas.get('/info_principal/:id_gabinete', async (req, res) => {
+rutas.post('/info_principal/:id_gabinete', async (req, res) => {
    const {id_gabinete} = req.params
-   console.log(id_gabinete, 'id_gabinete')
+   const { condicion, buscar } = req.body
+   console.log(condicion, buscar)
    const ctr = new Control();
-   const control = await ctr.verPorIdGabinete(id_gabinete)
+   const control = await ctr.verPorIdGabinete(id_gabinete, condicion, buscar)
    res.status(control.codigo).json(control.respuesta)
 });
 

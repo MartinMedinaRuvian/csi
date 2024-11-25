@@ -23,8 +23,26 @@ class ElementoDAO {
         return datos
     }
 
-    async verPorIdGabinete(id_gabinete) {
-        const datos = await conexion.query('SELECT e.id, e.codigo, e.observacion, e.codigo_inventario, e.categoria, e.numero_puertos, e.tipo_conector, e.ruta_imagen, e.fecha_creacion, e.fecha_actualizacion, e.estado, e.id_gabinete, e.id_usuario, e.id_tipo_dispositivo_pasivo, td.descripcion AS tipo_dispositivo FROM ' + nombreTabla + ' e INNER JOIN tipo_dispositivo_pasivo td ON td.id = e.id_tipo_dispositivo_pasivo WHERE e.id_gabinete=?' + " AND e.estado='A'" + " ORDER BY e.codigo ASC", [id_gabinete])
+    async verPorIdGabinete(id_gabinete, condicion, buscar) {
+        const query = `
+    SELECT 
+        e.id, e.codigo, e.observacion, e.codigo_inventario, e.categoria, 
+        e.numero_puertos, e.tipo_conector, e.ruta_imagen, e.fecha_creacion, 
+        e.fecha_actualizacion, e.estado, e.id_gabinete, e.id_usuario, 
+        e.id_tipo_dispositivo_pasivo, 
+        td.descripcion AS tipo_dispositivo
+    FROM ${nombreTabla} e
+    INNER JOIN tipo_dispositivo_pasivo td 
+        ON td.id = e.id_tipo_dispositivo_pasivo
+    WHERE 
+        e.id_gabinete = ? 
+        AND e.estado = 'A' 
+        AND ${condicion} LIKE ?
+    ORDER BY e.codigo ASC
+    `;
+
+        const values = [id_gabinete, `%${buscar}%`];
+        const datos = await conexion.query(query, values)
         return datos
     }
 
@@ -46,45 +64,45 @@ class ElementoDAO {
 
     async guardar(dato) {
         const {
-          id_tipo_dispositivo_pasivo,
-          codigo,
-          observacion,
-          codigo_inventario,
-          categoria,
-          numero_puertos,
-          tipo_conector,
-          ruta_imagen,
-          fecha_creacion,
-          fecha_actualizacion,
-          estado,
-          id_gabinete,
-          id_usuario
+            id_tipo_dispositivo_pasivo,
+            codigo,
+            observacion,
+            codigo_inventario,
+            categoria,
+            numero_puertos,
+            tipo_conector,
+            ruta_imagen,
+            fecha_creacion,
+            fecha_actualizacion,
+            estado,
+            id_gabinete,
+            id_usuario
         } = dato;
         const datoGuardar = new Elemento(
-          id_tipo_dispositivo_pasivo,
-          codigo,
-          observacion,
-          codigo_inventario,
-          categoria,
-          numero_puertos,
-          tipo_conector,
-          ruta_imagen,
-          fecha_creacion,
-          fecha_actualizacion,
-          estado,
-          id_gabinete,
-          id_usuario
+            id_tipo_dispositivo_pasivo,
+            codigo,
+            observacion,
+            codigo_inventario,
+            categoria,
+            numero_puertos,
+            tipo_conector,
+            ruta_imagen,
+            fecha_creacion,
+            fecha_actualizacion,
+            estado,
+            id_gabinete,
+            id_usuario
         );
         const guardar = await conexion.query('INSERT INTO ' + nombreTabla + ' SET ?', [datoGuardar]);
         return guardar.affectedRows > 0 ? guardar.insertId : -1;
-      }
-      
+    }
+
 
     async cambiarEstado(estado, id) {
         const cambiar = await conexion.query('UPDATE ' + nombreTabla + ' SET estado=? WHERE ' + idPropiedad + '=?', [estado, id])
         return cambiar.affectedRows > 0
-    }    
-    
+    }
+
     async actualizar(dato) {
         const generarQueryActualizarDB = new GenerarQueryActualizarDB(dato, nombreTabla, idPropiedad, ElementoPasivo)
         const consulta = await generarQueryActualizarDB.consultaGenerada()
@@ -98,7 +116,7 @@ class ElementoDAO {
         }
         return false
     }
-    
+
     async eliminar(id) {
         const eliminar = await conexion.query('DELETE FROM ' + nombreTabla + ' WHERE ' + idPropiedad + '=?', [id]);
         return eliminar.affectedRows > 0

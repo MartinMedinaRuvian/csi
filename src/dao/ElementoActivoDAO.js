@@ -12,9 +12,21 @@ class ElementoDAO {
         return datos
     }
 
-    async obtenerFiltrado(condicion, buscar) {
-        const datos = await conexion.query('SELECT * FROM ' + nombreTabla + " WHERE " + condicion + " LIKE '%" + buscar + "%' AND estado='A'" + " ORDER BY codigo ASC")
-        return datos
+    async obtenerFiltrado(condicion, buscar, limite, offset) {
+        const datos = await conexion.query(`
+            SELECT * 
+            FROM ${nombreTabla} 
+            WHERE ${condicion} LIKE '%${buscar}%'
+            AND estado='A' 
+            ORDER BY codigo DESC 
+            LIMIT ${limite} OFFSET ${offset}
+        `);
+        const total = await conexion.query(`
+            SELECT COUNT(*) AS total 
+            FROM ${nombreTabla} 
+            WHERE ${condicion} LIKE '%${buscar}%'
+        `);
+        return { datos, total: total[0].total };
     }
 
     async verInfoPrincipalPorIdGabinete(id_gabinete) {
@@ -22,8 +34,30 @@ class ElementoDAO {
         return datos
     }
 
-    async verPorIdGabinete(id_gabinete) {
-        const datos = await conexion.query('SELECT e.id, e.codigo, e.serial, e.observacion, e.codigo_inventario, e.estado, e.os, e.version_os, e.mac, e.gateway, e.ip_v4, e.ip_v6, e.cantidad_puertos_por_defecto, e.puerto_logico_por_defecto, e.puerto_fisico_por_defecto, e.ruta_imagen, e.fecha_creacion, e.fecha_actualizacion, e.id_gabinete, e.id_usuario, e.id_tipo_modelo, e.id_tipo_marca, e.id_tipo_dispositivo_activo, td.descripcion AS tipo_dispositivo, tr.descripcion AS tipo_referencia, tm.descripcion AS tipo_modelo, tmr.descripcion AS tipo_marca FROM ' + nombreTabla + ' e INNER JOIN tipo_dispositivo_activo td ON td.id = e.id_tipo_dispositivo_activo INNER JOIN tipo_referencia tr ON tr.id = e.id_tipo_referencia INNER JOIN tipo_modelo tm ON tm.id = e.id_tipo_modelo INNER JOIN tipo_marca tmr ON tmr.id = e.id_tipo_marca WHERE e.id_gabinete=?' + " AND e.estado='A'" + " ORDER BY e.codigo ASC", [id_gabinete])
+    async verPorIdGabinete(id_gabinete, condicion, buscar) {
+        const query = `
+            SELECT 
+                e.id, e.codigo, e.serial, e.observacion, e.codigo_inventario, e.estado, 
+                e.os, e.version_os, e.mac, e.gateway, e.ip_v4, e.ip_v6, 
+                e.cantidad_puertos_por_defecto, e.puerto_logico_por_defecto, 
+                e.puerto_fisico_por_defecto, e.ruta_imagen, e.fecha_creacion, 
+                e.fecha_actualizacion, e.id_gabinete, e.id_usuario, e.id_tipo_modelo, 
+                e.id_tipo_marca, e.id_tipo_dispositivo_activo, 
+                td.descripcion AS tipo_dispositivo, 
+                tr.descripcion AS tipo_referencia, 
+                tm.descripcion AS tipo_modelo, 
+                tmr.descripcion AS tipo_marca
+            FROM ${nombreTabla} e
+            INNER JOIN tipo_dispositivo_activo td ON td.id = e.id_tipo_dispositivo_activo
+            INNER JOIN tipo_referencia tr ON tr.id = e.id_tipo_referencia
+            INNER JOIN tipo_modelo tm ON tm.id = e.id_tipo_modelo
+            INNER JOIN tipo_marca tmr ON tmr.id = e.id_tipo_marca
+            WHERE e.id_gabinete = ? AND e.estado = 'A' AND ${condicion} LIKE ?
+            ORDER BY e.codigo ASC
+            `;
+        
+        const values = [id_gabinete, `%${buscar}%`];
+        const datos = await conexion.query(query, values)
         return datos
     }
 
@@ -93,13 +127,13 @@ class ElementoDAO {
         const guardar = await conexion.query('INSERT INTO ' + nombreTabla + ' SET ?', [datoGuardar]);
         return guardar.affectedRows > 0 ? guardar.insertId : -1;
     }
-    
+
 
     async cambiarEstado(estado, id) {
         const cambiar = await conexion.query('UPDATE ' + nombreTabla + ' SET estado=? WHERE ' + idPropiedad + '=?', [estado, id])
         return cambiar.affectedRows > 0
-    }    
-    
+    }
+
     async actualizar(dato) {
         console.log(dato, 'd')
         const generarQueryActualizarDB = new GenerarQueryActualizarDB(dato, nombreTabla, idPropiedad, Elemento)
@@ -113,7 +147,7 @@ class ElementoDAO {
         }
         return false
     }
-    
+
     async eliminar(id) {
         const eliminar = await conexion.query('DELETE FROM ' + nombreTabla + ' WHERE ' + idPropiedad + '=?', [id]);
         return eliminar.affectedRows > 0

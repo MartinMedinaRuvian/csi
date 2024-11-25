@@ -26,10 +26,15 @@ const observacionPorMethod = (method) => {
   return observacion
 }
 
+const esConsultaPOST = (url) => {
+  console.log(url, 'prueba titin')
+  return url.includes('info_principal') || url.includes('buscarporcondicion') ? true : false
+}
+
 const logMiddleware = async (req, res, next) => {
   try {
     const { method, originalUrl } = req;
-    if (method !== 'GET') {
+    if (method !== 'GET' && !esConsultaPOST(originalUrl)) {
       const clientIp = getClientIp(req);
       let idUsuario = null;
 
