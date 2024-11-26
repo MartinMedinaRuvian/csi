@@ -44,7 +44,7 @@ class MantenimientoDAO {
             ${columnaTablaConsultar} = ? 
             AND ${condicion} LIKE ? 
         ORDER BY 
-            m.id DESC 
+            m.fecha DESC 
         LIMIT ? OFFSET ?;
     `;
 
@@ -81,7 +81,7 @@ class MantenimientoDAO {
           ${columnaTablaConsultar} = ? 
           AND m.fecha BETWEEN ? AND ?
       ORDER BY 
-          m.id DESC 
+          m.fecha DESC 
       LIMIT ? OFFSET ?;
   `;
 
@@ -118,7 +118,7 @@ class MantenimientoDAO {
           ${columnaTablaConsultar} = ? 
           AND m.fecha BETWEEN ? AND ? 
           AND ${condicion} LIKE ?
-      ORDER BY m.id DESC 
+      ORDER BY m.fecha DESC 
       LIMIT ? OFFSET ?;
   `;
 
@@ -168,6 +168,11 @@ class MantenimientoDAO {
     console.log(id_mantenimiento, 'ver infoooo')
     const datos = await conexion.query('SELECT id, codigo, observacion, realizado_por, fecha, estado FROM ' + nombreTablaGeneral + ' WHERE id=?', [id_mantenimiento])
     return datos[0]
+  }
+
+  async verInfoPrincipal() {
+    const datos = await conexion.query("SELECT codigo, observacion, realizado_por, id FROM " + nombreTablaGeneral)
+    return datos
   }
 
   async actualizar(dato) {

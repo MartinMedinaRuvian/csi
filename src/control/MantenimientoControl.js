@@ -38,6 +38,24 @@ class MantenimientoControl {
     }
   }
 
+ 
+  async verInfoPrincipal() {
+    const dao = new DAO('');
+    try {
+      const datos = await dao.verInfoPrincipal();
+      return {
+        codigo: 200,
+        respuesta: datos
+      }
+    } catch (error) {
+      console.log(error)
+      return {
+        codigo: 500,
+        respuesta: error
+      }
+    }
+  }
+
   async guardar(datos, idRegistroTabla) {
     try {
       const dao = new DAO(this.nombreTabla)
