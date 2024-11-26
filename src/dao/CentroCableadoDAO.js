@@ -8,17 +8,17 @@ const idPropiedad = 'id'
 class CentroCableadoDAO {
 
     async obtenerTodos() {
-        const datos = await conexion.query("SELECT * FROM " + nombreTabla + " WHERE estado='A'" + " ORDER BY " + idPropiedad + " DESC")
+        const datos = await conexion.query("SELECT * FROM " + nombreTabla + " WHERE estado='A'" + " ORDER BY " + idPropiedad + " ASC")
         return datos
     }
 
     async obtenerFiltrado(condicion, buscar) {
-        const datos = await conexion.query('SELECT * FROM ' + nombreTabla + " WHERE " + condicion + " LIKE '%" + buscar + "%' AND estado='A'" + " ORDER BY " + idPropiedad + " DESC")
+        const datos = await conexion.query('SELECT * FROM ' + nombreTabla + " WHERE " + condicion + " LIKE '%" + buscar + "%' AND estado='A'" + " ORDER BY " + idPropiedad + " ASC")
         return datos
     }
 
     async verPorIdEdificio(id_edificio) {
-        const datos = await conexion.query('SELECT * FROM ' + nombreTabla + ' WHERE id_edificio=?' + "AND estado=0" + " ORDER BY numero DESC", [id_edificio])
+        const datos = await conexion.query('SELECT * FROM ' + nombreTabla + ' WHERE id_edificio=?' + "AND estado=0" + " ORDER BY numero ASC", [id_edificio])
         return datos
     }
 
