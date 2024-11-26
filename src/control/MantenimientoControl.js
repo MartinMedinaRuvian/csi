@@ -38,6 +38,22 @@ class MantenimientoControl {
     }
   }
 
+  async verInfoMantenimiento(idMantenimiento) {
+    return await new DAO(this.nombreTabla).verInfo(idMantenimiento)
+  }
+
+  async eliminarSoloMantenimientoTabla(idMantenimiento, idRegistroTabla) {
+    try {
+      console.log(idMantenimiento, idRegistroTabla)
+      const dao = new DAO(this.nombreTabla)
+      if (await dao.eliminarMantenimientoTabla(idMantenimiento, idRegistroTabla)) {
+        return true
+      }
+    } catch (error) {
+      console.log(error)
+    }
+    return false
+  }
  
   async verInfoPrincipal() {
     const dao = new DAO('');
@@ -157,11 +173,7 @@ class MantenimientoControl {
       return { codigo: 500, respuesta: error };
     }
   }
-
-  async verInfoMantenimiento(idMantenimiento) {
-    return await new DAO(this.nombreTabla).verInfoMantenimiento(idMantenimiento)
-  }
-
+  
   async actualizar(dato) {
     const dao = new DAO('')
     try {
