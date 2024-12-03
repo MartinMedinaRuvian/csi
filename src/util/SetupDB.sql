@@ -11,8 +11,8 @@
     fecha_actualizacion date
   );
 
-  insert into rol(descripcion) values ('ADMIN');
-  insert into rol(descripcion) values ('USUARIO');
+  insert into rol(descripcion, fecha_creacion) values ('ADMIN', '2024-12-02');
+  insert into rol(descripcion, fecha_creacion) values ('USUARIO', '2024-12-02');
 
   create table if not exists usuario(
     id int(10) not null auto_increment primary key,
