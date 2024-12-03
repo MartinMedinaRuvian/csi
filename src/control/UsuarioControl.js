@@ -4,6 +4,7 @@ require("dotenv").config();
 
 const DAO = require('../dao/UsuarioDAO');
 const ValidacionPropiedadesObligatorias = require('../util/validar_propiedades');
+const FechaUti = require('../util/Fecha')
 
 class UsuarioControl {
 
@@ -185,6 +186,7 @@ class UsuarioControl {
         dato.nombre_completo = dato.nombre_completo.toUpperCase()
         dato.password = bcrypt.hashSync(dato.password, saltRounds);
         dato.estado = 'A'
+        dato.fecha_creacion = new FechaUti().fechaActual()
         const codigoGuardar = await dao.guardar(dato);
         if (codigoGuardar > -1) {
           return {
