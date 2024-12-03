@@ -33,8 +33,8 @@ class UsuarioDAO{
     }
 
     async guardar(datos){
-        const {password, nombre_completo, email, estado, rol_id} = datos;
-        const datoGuardar = new Usuario(password, nombre_completo.toUpperCase(), email, estado, rol_id);
+        const {password, nombre_completo, email, estado, rol_id, fecha_creacion} = datos;
+        const datoGuardar = new Usuario(password, nombre_completo.toUpperCase(), email, estado, rol_id, fecha_creacion);
         const guardar = await conexion.query('INSERT INTO ' + nombreTabla + ' SET ?', [datoGuardar]);
         return guardar.affectedRows > 0 ? guardar.insertId : -1;
     }
